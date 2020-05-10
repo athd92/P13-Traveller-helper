@@ -20,33 +20,34 @@
 </head>
 
 <body>
-{% comment %} START BG IMG {% endcomment %}
-    <div style="background: url('../../static/img/ball.jpg')" class="page-holder bg-cover">
+    {% comment %} START BG IMG {% endcomment %}
+    <div style="background: linear-gradient(rgba(119, 119, 119, 0.5),rgba(60, 66, 68, 0.5)),  url('../../static/img/background-register.jpeg')" class="page-holder bg-cover">
 
 
-{% comment %} NAVBAR {% endcomment %}
-{% block content %}
-          {% include './includes/navbar.html' %}
-{% endblock content %}
-{% comment %} END NAVBAR {% endcomment %}
+        {% comment %} NAVBAR {% endcomment %}
+        {% block content %}
+        {% include './includes/navbar.html' %}
+        {% endblock content %}
+        {% comment %} END NAVBAR {% endcomment %}
 
 
-{% comment %} SEARCH {% endcomment %}
-        <div id="cover-caption">
-            <div class="container">
+        {% comment %} SEARCH {% endcomment %}
+        <div id="cover-caption" class="m-5">
+            <div class="container mt-5">
                 <div class="row text-white">
                     <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form ">
                         <div class="px-2">
-                            <h3 class="text-inverse m-5">DESTINATION</h3>
+                            <h3 class="text-inverse m-5" id="destination">DESTINATION</h3>
                             <form action="#" class="justify-content-center m-5" method="POST">
                                 {% csrf_token %}
-                                <input type="text" class="form-control input-lg" id="search_input"placeholder="Ex: Paris" />
+                                <input type="text" class="form-control input-lg" id="search_input"
+                                    placeholder="Ex: Paris" />
 
                                 <div class="form-group">
                                 </div>
                                 <button type="button" class="btn btn-warning" id='getinfos'>Get infos
-                                  {% comment %} <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> {% endcomment %}
-
+                                    {% comment %} <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span> {% endcomment %}
                                 </button>
                             </form>
                         </div>
@@ -54,11 +55,10 @@
                 </div>
             </div>
         </div>
-{% comment %} END SEARCH {% endcomment %}
+        {% comment %} END SEARCH {% endcomment %}
 
 
-
-{% comment %} END BG IMAGE {% endcomment %}
+        {% comment %} END BG IMAGE {% endcomment %}
     </div>
 
 
@@ -67,11 +67,28 @@
 
 
 
-{% comment %} FOOTER {% endcomment %}
+    {% comment %} FOOTER {% endcomment %}
 
 
 
-{% comment %} END FOOTER {% endcomment %}
+    {% comment %} END FOOTER {% endcomment %}
+
+
+
+
+    {% comment %} RGPD {% endcomment %}
+
+    <div id='cookie-bar'
+        style='position:fixed; bottom:0; left:0; width: 100%;  text-align: center; padding: 12px 0; margin:0;  background-color: #343a40;  color: #919191;  font: 14px arial, sans-serif;'>
+        <div style='display:inline-block;width:78%;margin:0; font-family: Arial;'>
+            This website use cookies -
+            But none of them are shared or traded!
+        </div>
+        <div style='width:20%;'></div>
+        <button id='agree-btn' type="button" class="btn btn-success">OK</button>
+
+    </div>
+    {% comment %} END RGPD {% endcomment %}
 
 
 

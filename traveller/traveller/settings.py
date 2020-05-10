@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'traveller',
     'main',
     'crispy_forms',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [

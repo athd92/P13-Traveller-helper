@@ -3,6 +3,19 @@
   }
   
   .bg-cover {
-    background-size: cover !important;
+  background-size: cover !important;
   }
   
+#agree-btn{
+  font-size: 100%;
+  position:absolute;
+  bottom:5px;
+  right:4%;
+  padding: 0 8px;
+  margin: 0;
+}
+
+#cover-caption{
+ margin-top: 5vw !important;
+ 
+}
