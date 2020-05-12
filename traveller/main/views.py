@@ -6,15 +6,22 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail
 from django.contrib.auth.views import LoginView
+import pycountry
+from .country import Country
+from django.http import JsonResponse
 
 
 def index(request):
     """
     This function returns the  template
     """
+    all_countries = list(pycountry.countries)
+    clist = []
+    for i in all_countries:
+        clist.append(i.name)
 
     form = SearchForm(request.POST)
-    context = {"form": form}
+    context = {"form": form, "clist": clist}
 
     return render(request, "main/index.html", context)
 
@@ -24,34 +31,13 @@ def get_infos(request):
     """
     Function used to send aliment infos by mail
     """
-    if request.user.is_authenticated:
-        if request.is_ajax():
+    if request.is_ajax():
 
-            search = request.POST["search"]
-            print("SEARCH")
-            print(search)
-            # aliment = Aliment.objects.get(id=aliment_id)
-            # date = aliment.date
-            # date = date[2:12]
-            # email = request.user.email
-            # email_from = settings.EMAIL_HOST_USER
-            # subject = "Fiche aliment"
-            # message = "Voici la fiche demandée"
-            # subject, from_email, to = (
-            #     "Fiche aliment Purbeurre",
-            #     email_from,
-            #     email_from,
-            # )
-            # try:
-            #     text_content = "Une petite faim? Voici les informations demandées."
-            #     context = {"aliment": aliment, "date": date}
-            #     html_content = render_to_string("main/email_notif.html", context)
-            #     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-            #     msg.attach_alternative(html_content, "text/html")
-            #     msg.send()
-            #     return JsonResponse({"response": "ok"})
-            # except:
-            #     return JsonResponse({"response": "error"})
+        search = request.POST["search"]
+        search = search.capitalize()
+        print(search)
+        return JsonResponse({"search": search})
+
     return HttpResponse("Ajax sended")
 
 
@@ -120,3 +106,25 @@ def logout_request(request):
         return redirect("main:index")
     else:
         return redirect("main:index")
+
+
+def account(request):
+    if request.user.is_authenticated:
+        name = request.user.username
+        email = request.user.email
+        context = {"name": name, "email": email}
+        return render(request, "main/account.html", context)
+    else:
+        return redirect("/")
+
+
+def posts(request):
+    all_countries = list(pycountry.countries)
+    clist = []
+    for i in all_countries:
+        clist.append(i.name)
+
+    form = SearchForm(request.POST)
+    context = {"form": form, "clist": clist}
+
+    return render(request, "main/posts.html", context)

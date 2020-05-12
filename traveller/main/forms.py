@@ -14,6 +14,8 @@ class UserFormWithEmail(UserCreationForm):
     '''Class used to register with email'''
 
     email = forms.EmailField(required=True)
+    age = forms.DecimalField(max_digits=2, min_value=18, decimal_places=0)
+    
     def __init__(self, *args, **kwargs):
         super(UserFormWithEmail, self).__init__(*args, **kwargs)
 
