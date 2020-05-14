@@ -1,7 +1,8 @@
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="/">Traveller Helper</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
@@ -9,14 +10,17 @@
     <ul class="navbar-nav mr-auto">
     </ul>
     {% if user.is_authenticated%}
-    <a class="nav-link text-warning" href="{% url 'main:account' %}" style='color:white'>My account</a>
-    <a class="nav-link text-warning" href="{% url 'main:logout' %}" style='color:white'>Logout</a>
+    <a class="nav-link text-warning" href="{% url 'main:account' %}" style='color:white'><i class="fa fa-address-card"
+        aria-hidden="true"></i> My account </a>
+    <a class="nav-link text-warning" href="{% url 'main:logout' %}" style='color:white'><i class="fa fa-sign-out"
+        aria-hidden="true"></i>
+      Logout</a>
     {% else %}
-    <a class="nav-link" href="{% url 'main:login' %}" style='color:white'>Login</a>
+    <a class="nav-link text-warning" href="{% url 'main:login' %}" style='color:white'>Login</a>
     <a class="nav-link" href="{% url 'main:register' %}" style='color:white'>Register</a>
     {% endif %}
-    
-    
+
+
   </div>
 </nav>
 

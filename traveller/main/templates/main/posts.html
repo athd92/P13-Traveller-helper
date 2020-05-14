@@ -37,27 +37,33 @@
 
 
 
-{% comment %} START TITLE {% endcomment %}
+        {% comment %} START TITLE {% endcomment %}
 
         <div id="cover-caption" class="m-5">
             <div class="container mt-5">
                 <div class="row text-white">
                     <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form ">
                         <div class="px-2">
-                            <h3 class="text-inverse m-5" id="destination">CHOOSE A COUNTRY</h3>
-                            <form action="#" class="justify-content-center m-5" method="POST">
-                                {% csrf_token %}
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    {% for el in clist%}
-                                    <option>{{el}}</option>
+                            <h3 class="text-inverse m-5" id="destination">{{name}}</h3>
+
+                            <form class="justify-content-center m-5" action="{% url 'main:posts'%}" method="GET">
+                                    {% csrf_token %}
+                                <select class="form-control" id="exampleFormControlSelect1" name="country_id"
+                                    onChange="form.submit();">
+
+                                    {% for country in clist%}
+                                    <option id='{{country.id}}' class="form-control" value="{{country.id}}">
+                                        {{country.name}}</option>
                                     {% endfor %}
 
                                 </select>
+
                                 <div class="form-group">
                                 </div>
-                                <button type="button" class="btn btn-warning" id='getinfos'>Get infos
-                                    {% comment %} <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span> {% endcomment %}
+                                <button type="form.submit" class="btn btn-success btn-lg m-2" id='getinfos'>
+                                    Travels</a> <i class="fa fa-globe" aria-hidden="true"></i> </button>
+                                <button type="button" class="btn btn-light  btn-lg m-2" id='getinfos'>Helpers
+                                    <i class="fa fa-users" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </div>
@@ -67,14 +73,45 @@
         </div>
 
 
-{% comment %} END TITLE {% endcomment %}
+        {% comment %} END TITLE {% endcomment %}
+
+        {% comment %} START MODAL {% endcomment %}
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn" style='background-color:#006400; color:white'>Save
+                            changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% comment %} END MODAL {% endcomment %}
+
+
 
 
         {% comment %} START POSTS {% endcomment %}
 
+        {% for post in posts %}
         <div class="card mr-5 ml-5 mt-2">
             <h5 class="card-header">Featured</h5>
-              <img class="card-img-right" src="..." alt="Card image cap">
+            <img class="card-img-right" src="..." alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">Special title treatment</h5>
                 <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
@@ -83,47 +120,8 @@
                 </footer>
             </div>
         </div>
+        {% endfor %}
 
-        <div class="card mr-5 ml-5 mt-2">
-            <h5 class="card-header">Featured</h5>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite>
-                </footer>
-            </div>
-        </div>
-        <div class="card mr-5 ml-5 mt-2">
-            <h5 class="card-header">Featured</h5>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite>
-                </footer>
-            </div>
-        </div>
-        <div class="card mr-5 ml-5 mt-2">
-            <h5 class="card-header">Featured</h5>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite>
-                </footer>
-            </div>
-        </div>
-        <div class="card mr-5 ml-5 mt-2">
-            <h5 class="card-header">Featured</h5>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite>
-                </footer>
-            </div>
-        </div>
 
         {% comment %} END POSTS {% endcomment %}
 

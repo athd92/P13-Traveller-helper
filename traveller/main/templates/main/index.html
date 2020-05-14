@@ -11,14 +11,15 @@
     <link rel="shortcut icon" href="favicon.png">
     <title>Traveller</title>
     <!-- Latest compiled and minified CSS -->
-    
-<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="{% static '/css/index.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
-
+    <link rel="stylesheet" href="{% static 'fontawesome/css/font-awesome.min.css'%}">
 </head>
 
 <body>
@@ -36,24 +37,26 @@
 
         {% comment %} SEARCH {% endcomment %}
         <div id="cover-caption" class="m-5">
-            <div class="container mt-5">
+            <div class="container mt-5" id='indexbox'>
                 <div class="row text-white">
                     <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form ">
                         <div class="px-2">
                             <h3 class="text-inverse m-5" id="destination">CHOOSE A COUNTRY</h3>
-                            <form action="#" class="justify-content-center m-5" method="POST">
+                            <form class="justify-content-center m-5" action="{% url 'main:posts'%}" method="GET">
                                 {% csrf_token %}
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    {% for el in clist%}
-                                    <option>{{el}}</option>
+                                {{form}}
+                                <select class="form-control" id="exampleFormControlSelect1" name="country_id" onChange="form.submit();">
+                                    {% for country in clist%}
+                                    <option id='{{country.id}}' class="form-control" value="{{country.id}}">{{country.name}}</option>
                                     {% endfor %}
 
                                 </select>
                                 <div class="form-group">
                                 </div>
-                                <button type="button" class="btn btn-warning" id='getinfos'>Get infos
-                                    {% comment %} <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span> {% endcomment %}
+                                <button type="form.submit" class="btn btn-success btn-lg m-2" id='getinfos'>
+                                   Travels</a> <i class="fa fa-globe" aria-hidden="true"></i> </button>
+                                <button type="button" class="btn btn-light  btn-lg m-2" id='getinfos'>Helpers
+                                    <i class="fa fa-users" aria-hidden="true"></i>
                                 </button>
                             </form>
                         </div>

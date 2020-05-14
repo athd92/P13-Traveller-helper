@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail
 from django.contrib.auth.views import LoginView
 import pycountry
-from .country import Country
+from .models import Country
 from django.http import JsonResponse
 
 
@@ -15,30 +15,13 @@ def index(request):
     """
     This function returns the  template
     """
-    all_countries = list(pycountry.countries)
     clist = []
-    for i in all_countries:
-        clist.append(i.name)
-
-    form = SearchForm(request.POST)
-    context = {"form": form, "clist": clist}
+    c = Country.objects.all()
+    for i in c:
+        clist.append(i)   
+    context = {"clist": clist}
 
     return render(request, "main/index.html", context)
-
-
-@requires_csrf_token
-def get_infos(request):
-    """
-    Function used to send aliment infos by mail
-    """
-    if request.is_ajax():
-
-        search = request.POST["search"]
-        search = search.capitalize()
-        print(search)
-        return JsonResponse({"search": search})
-
-    return HttpResponse("Ajax sended")
 
 
 def login_request(request):
@@ -119,12 +102,20 @@ def account(request):
 
 
 def posts(request):
-    all_countries = list(pycountry.countries)
-    clist = []
-    for i in all_countries:
-        clist.append(i.name)
-
-    form = SearchForm(request.POST)
-    context = {"form": form, "clist": clist}
-
-    return render(request, "main/posts.html", context)
+    if request.method == "GET":
+        country_id = request.GET.get("country_id")
+        clist = []
+        c = Country.objects.all()
+        for i in c:
+            clist.append(i)
+        c = Country.objects.get(id=country_id)
+        name = c.name
+        
+        context = {
+            "form": 'form',
+            "clist": clist,
+            "name": name,
+            "country_id": country_id,
+        }
+    
+    return render(request, f'main/posts.html', context)

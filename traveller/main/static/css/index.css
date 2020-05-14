@@ -1,21 +1,30 @@
 .page-holder {
     min-height: 100vh;
-  }
-  
-  .bg-cover {
-  background-size: cover !important;
-  }
-  
-#agree-btn{
-  font-size: 100%;
-  position:absolute;
-  bottom:5px;
-  right:4%;
-  padding: 0 8px;
-  margin: 0;
 }
 
-#cover-caption{
- margin-top: 5vw !important;
- 
+.bg-cover {
+    background-size: cover !important;
+}
+
+#agree-btn {
+    font-size: 100%;
+    position: absolute;
+    bottom: 5px;
+    right: 4%;
+    padding: 0 8px;
+    margin: 0;
+}
+
+#cover-caption {
+    margin-top: 5vw !important;
+}
+
+#indexbox {
+    background-color: rgb(75, 75, 94);
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    border-style: solid;
+    border-color: #ffc107;
+    border-radius: 5px 5px 5px 5px;
 }
