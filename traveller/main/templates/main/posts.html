@@ -39,15 +39,16 @@
 
         {% comment %} START TITLE {% endcomment %}
 
-        <div id="cover-caption" class="m-5">
+        <div id="cover-caption" class="m-2">
             <div class="container mt-5">
                 <div class="row text-white">
-                    <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form ">
+                    <div class="col-xl-4 col-lg-4 col-md-8 col-sm-10 mx-auto text-center form ">
                         <div class="px-2">
-                            <h3 class="text-inverse m-5" id="destination">{{name}}</h3>
+                            <h3 class="text-inverse m-2" id="destination">{{name}}</h3>
+                            <img src={{url}}>
 
                             <form class="justify-content-center m-5" action="{% url 'main:posts'%}" method="GET">
-                                    {% csrf_token %}
+                                {% csrf_token %}
                                 <select class="form-control" id="exampleFormControlSelect1" name="country_id"
                                     onChange="form.submit();">
 
@@ -60,14 +61,16 @@
 
                                 <div class="form-group">
                                 </div>
-                                <button type="form.submit" class="btn btn-success btn-lg m-2" id='getinfos'>
-                                    Travels</a> <i class="fa fa-globe" aria-hidden="true"></i> </button>
 
-                                <button type="button" class="btn btn-dark  btn-lg m-2" id='getinfos' data-toggle="modal" data-target="#exampleModal">Create a post 
+                                {% if user.is_authenticated %}
+                                <button type="button" class="btn btn-dark  btn-lg m-2" id='getinfos' data-toggle="modal"
+                                    data-target="#exampleModal">Create a post
                                     <i class="fa fa-plus-circle text-warning" aria-hidden="true"></i>
                                 </button>
+                                {% else %}
+                                {% endif%}
 
-                            
+
                             </form>
                         </div>
                     </div>
@@ -91,14 +94,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}} <img src={{url}}>
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         {% block postitem %}
-                            {%include './includes/postitem.html'%}
+                        {%include './includes/postitem.html'%}
                         {% endblock%}
                     </div>
                 </div>
@@ -113,16 +117,36 @@
 
         {% comment %} START POSTS {% endcomment %}
 
-        {% for post in posts %}
-        <div class="card mr-5 ml-5 mt-2">
-            <h5 class="card-header">New post</h5>
-            <img class="card-img-right" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite>
-                </footer>
+        {% for post in all_posts %}
+
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <div class="card post-card m-2">
+                        <div class="card-header">
+                            <div id="textbox">
+                                <h3 class="alignleft">{{post.country}} - {{post.city}}
+                                    <img src={{url}} style='width:1em'>
+                                </h3>
+                                <p class="alignright">Posted: {{post.creation_date}}</p>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <h5 class="card-title">Theme : {{post.interest}}</h5>
+                            <p class="card-text">Message : {{post.message}}</p>
+                            <a href="#" class="btn btn-primary alignright">Contact traveller</a>
+                            <small class="text-muted">Posted by: {{post.created_by}}</small>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -154,7 +178,7 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static '/js/index.js'%}"></script>
+    <script src="{% static '/js/posts.js'%}"></script>
 
     {% comment %} END LINKS {% endcomment %}
 </body>

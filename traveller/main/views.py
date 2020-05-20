@@ -4,11 +4,12 @@ from .forms import SearchForm
 from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserFormWithEmail
+from .forms import UserFormWithEmail, PostForm
 from django.contrib.auth.views import LoginView
 import pycountry
-from .models import Country
+from .models import Country, Post
 from django.http import JsonResponse
+from datetime import date
 
 
 def index(request):
@@ -18,7 +19,7 @@ def index(request):
     clist = []
     c = Country.objects.all()
     for i in c:
-        clist.append(i)   
+        clist.append(i)
     context = {"clist": clist}
 
     return render(request, "main/index.html", context)
@@ -64,7 +65,7 @@ def register(request):
             username = form.cleaned_data.get("username")
             login(request, user)
 
-            return redirect("main:homepage")
+            return render(request, "main/index.html")
         else:
             return render(
                 request=request,
@@ -109,13 +110,65 @@ def posts(request):
         for i in c:
             clist.append(i)
         c = Country.objects.get(id=country_id)
+        alpha = c.alpha_2
+        print(alpha)
         name = c.name
-        
+
+        url = f"../static/img/flags/flag-{alpha}.jpg"
+        user = request.user
+        try:
+            posts = Post.objects.filter(country=c.name)
+        except:
+            posts = None
+
+        all_posts = Post.objects.filter(country=c.name)
         context = {
-            "form": 'form',
+            "url": url,
+            "user": user,
+            "form": "form",
             "clist": clist,
             "name": name,
             "country_id": country_id,
+            "all_posts": all_posts,
         }
-    
-    return render(request, f'main/posts.html', context)
+
+    return render(request, f"main/posts.html", context)
+
+
+def send_post(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = PostForm(request.POST)
+            if form.is_valid():
+                today = date.today()
+                new_post = Post(
+                    country=form.cleaned_data["country"],
+                    city=form.cleaned_data["city"],
+                    total_travelers=form.cleaned_data["total"],
+                    wanted_travelers=form.cleaned_data["wanted"],
+                    free_places=form.cleaned_data["free"],
+                    interest=form.cleaned_data["interest"],
+                    title=form.cleaned_data["title"],
+                    message=form.cleaned_data["message"],
+                    start_date=form.cleaned_data["start"],
+                    end_date=form.cleaned_data["end"],
+                    ready=False,
+                    created_by=request.user,
+                )
+                new_post.save()
+                clist = []
+                c = Country.objects.all()
+                for i in c:
+                    clist.append(i)
+                all_posts = Post.objects.filter(
+                    country=form.cleaned_data["country"]
+                )
+                context = {"all_posts": all_posts, "clist": clist}
+                return render(request, "main/posts.html", context)
+            else:
+                return HttpResponse(form.errors)
+
+        else:
+            return HttpResponse(form.non_field_errors)
+    else:
+        return render(request, "main/posts.html")

@@ -10,7 +10,7 @@
           <div class="col-12">
              <div class="card">
                <div class="card-body">
-                    <form method="post" class="form" style="color:  #343a40; ">
+                    <form action="{% url 'main:register'%}" method="post" class="form" style="color:  #343a40; ">
                     {% csrf_token %}
                     {% bootstrap_form form %}
                     {% buttons %}

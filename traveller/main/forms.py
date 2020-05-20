@@ -28,3 +28,40 @@ class UserFormWithEmail(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+# Create your models here.
+class PostForm(forms.Form):
+    """
+    Class used to define a post
+    """
+    country = forms.CharField(max_length=200)
+    city = forms.CharField(max_length=200)
+    total = forms.DecimalField(max_digits=4, decimal_places=0)
+    wanted = forms.DecimalField(max_digits=4, decimal_places=0)
+    free = forms.DecimalField(max_digits=4, decimal_places=0)
+    interest = forms.CharField(max_length=200)
+    title = forms.CharField(max_length=200)
+    message = forms.CharField(max_length=2000)
+    start = forms.CharField(max_length=200)
+    end = forms.CharField(max_length=200)
+    budget = forms.CharField(max_length=100)
+
+    def save(self, commit=True):
+
+        country = self.country.cleaned_data['country']
+        city = self.city.cleaned_data['city']
+        total = self.total.cleaned_data['total']
+        wanted = self.wanted.cleaned_data['wanted']
+        free = self.free.cleaned_data['free']
+        interest = self.interest.cleaned_data['interest']
+        title = self.title.cleaned_data['title']
+        message = self.message.cleaned_data['message']
+        start = self.start.cleaned_data['start']
+        end = self.end.cleaned_data['end']
+        budget = self.budget.cleaned_data['budget']
+        
+        return self.country
+
+    def __repr__(self):
+        return f"{self.country}"
