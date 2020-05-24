@@ -1,9 +1,14 @@
 .page-holder {
-    min-height: 100vh;
-}
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    background: lime;
+    /* Just to visualize the extent */
 
-.bg-cover {
-    background-size: cover !important;
+
 }
 
 #agree-btn {
@@ -15,17 +20,14 @@
     margin: 0;
 }
 
-#cover-caption {
-    margin-top: 5vw !important;
-}
 
 #indexbox {
-    background-color: rgb(75, 75, 94);
+    background-color: rgb(231, 231, 231);
     -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     border-style: solid;
-    border-color: #ffc107;
+    border-color: grey;
     border-radius: 5px 5px 5px 5px;
 }
 
@@ -39,4 +41,15 @@
 
 .alignright {
     float: right;
+}
+
+.indexcard {
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+}
+
+#destination{
+    color: #343a40;
+    font-family: 'Chelsea Market', cursive;
 }

@@ -10,6 +10,8 @@ import pycountry
 from .models import Country, Post
 from django.http import JsonResponse
 from datetime import date
+from django.db.models import Count
+from django.core.paginator import Paginator
 
 
 def index(request):
@@ -17,10 +19,21 @@ def index(request):
     This function returns the  template
     """
     clist = []
+    choicelist = []
     c = Country.objects.all()
     for i in c:
-        clist.append(i)
-    context = {"clist": clist}
+        choicelist.append(i)
+
+    post_count = Country.objects.annotate(Count("post"))
+    clist = list(
+        post_count.values_list("name", "flag", "alpha_2", "post__count")
+    )  # list of tuple
+
+    paginator = Paginator(clist, 6)  # Show 25 contacts per page.
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    context = {"clist": clist, "choicelist": choicelist, "page_obj": page_obj}
 
     return render(request, "main/index.html", context)
 
@@ -105,6 +118,7 @@ def account(request):
 def posts(request):
     if request.method == "GET":
         country_id = request.GET.get("country_id")
+        print(country_id)
         clist = []
         c = Country.objects.all()
         for i in c:
@@ -117,11 +131,11 @@ def posts(request):
         url = f"../static/img/flags/flag-{alpha}.jpg"
         user = request.user
         try:
-            posts = Post.objects.filter(country=c.name)
+            posts = Post.objects.filter(country__id=c.id)
         except:
             posts = None
 
-        all_posts = Post.objects.filter(country=c.name)
+        all_posts = Post.objects.filter(country__id=c.id)
         context = {
             "url": url,
             "user": user,
@@ -140,9 +154,14 @@ def send_post(request):
         if request.method == "POST":
             form = PostForm(request.POST)
             if form.is_valid():
+                country = Country.objects.get(
+                    name=form.cleaned_data["country"]
+                )
+                print("COUNTRY")
+                print(country.id)
                 today = date.today()
                 new_post = Post(
-                    country=form.cleaned_data["country"],
+                    country=country,
                     city=form.cleaned_data["city"],
                     total_travelers=form.cleaned_data["total"],
                     wanted_travelers=form.cleaned_data["wanted"],
@@ -156,14 +175,21 @@ def send_post(request):
                     created_by=request.user,
                 )
                 new_post.save()
+
                 clist = []
                 c = Country.objects.all()
                 for i in c:
                     clist.append(i)
-                all_posts = Post.objects.filter(
-                    country=form.cleaned_data["country"]
-                )
-                context = {"all_posts": all_posts, "clist": clist}
+                all_posts = Post.objects.filter(country__id=country.id)
+                alpha = country.alpha_2
+                url = f"../static/img/flags/flag-{alpha}.jpg"
+                name = country.name
+                context = {
+                    "all_posts": all_posts,
+                    "clist": clist,
+                    "url": url,
+                    "name": name,
+                }
                 return render(request, "main/posts.html", context)
             else:
                 return HttpResponse(form.errors)

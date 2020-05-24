@@ -20,12 +20,12 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/index.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
     <link rel="stylesheet" href="{% static 'fontawesome/css/font-awesome.min.css'%}">
+    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet"> 
 </head>
 
 <body>
     {% comment %} START BG IMG {% endcomment %}
-    <div style="background: linear-gradient(rgba(119, 119, 119, 0.5),rgba(60, 66, 68, 0.5)),  url('../../static/img/background-register.jpeg')"
-        class="page-holder bg-cover">
+    <div style="background:  url('../../static/img/background-register.jpeg')" class="page-holder bg-cover">
 
 
         {% comment %} NAVBAR {% endcomment %}
@@ -37,8 +37,8 @@
 
         {% comment %} SEARCH {% endcomment %}
 
-        <div id="cover-caption" class="m-5">
-            <div class="container mt-5" id='indexbox'>
+        <div id="cover-caption" class="mb-3">
+            <div class="container mt-0" id='indexbox'>
                 <div class="container">
                     <div class="row text-white">
                         <div class="col-sm">
@@ -52,7 +52,7 @@
                                     {{form}}
                                     <select class="form-control" id="exampleFormControlSelect1" name="country_id"
                                         onChange="form.submit();">
-                                        {% for country in clist%}
+                                        {% for country in choicelist%}
                                         <option id='{{country.id}}' class="form-control" value="{{country.id}}">
                                             {{country.name}}</option>
                                         {% endfor %}
@@ -75,6 +75,111 @@
 
 
 
+        {% comment %} PAGINATION {% endcomment %}
+
+        <div class="container">
+            <div class="row  justify-content-center">
+                <div class="pagination ">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                        <button type="button" class="btn btn-primary btn-sm"><a href="?page=1"
+                                style="color:#ffc107 ">&laquo; first</a></button>
+                        <button type="button" class="btn btn-primary btn-sm"><a
+                                href="?page={{ page_obj.previous_page_number }}"
+                                style="color:#ffc107 ">previous</a></button>
+
+                        {% endif %}
+                        {% comment %} <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span> {% endcomment %}
+                        {% if page_obj.has_next %}
+                        <button type="button" class="btn btn-primary btn-sm"><a
+                                href="?page={{ page_obj.next_page_number }}" style='color:#ffc107 '>next</a></button>
+                        <button type="button" class="btn btn-primary btn-sm"><a
+                                href="?page={{ page_obj.paginator.num_pages }}" style="color:#ffc107 ">last
+                                &raquo;</a></button>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        {% comment %} END PAGINATION {% endcomment %}
+
+
+
+
+
+
+
+        {% comment %} COUNTRY CARDS {% endcomment %}
+        <div class="container">
+            <div class="row  justify-content-center">
+                {% for c in page_obj %}
+                <div class="card m-2 indexcard" style="width: 18rem;">
+                    <div class="card-body">
+                        <img class='alignright' src={{c.1}}>
+
+                        <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
+
+                        <p><small>This line of text is meant to be treated as fine print.</small></p>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
+                        </div>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        {% if c.3 == 0 %}
+                        <button type="button" class="btn btn-primary btn-sm">Create a post</button>
+                        {% elif c.3 == 1 %}
+                        <button type="button" class="btn btn-primary btn-sm">See the post</button>
+                        {% else %}
+                        <button type="button" class="btn btn-primary btn-sm">See the posts</button>
+                        {%endif%}
+
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        {% comment %} END COUNTRY CARDS {% endcomment %}
+
+        {% comment %} PAGINATION {% endcomment %}
+
+        <div class="container">
+            <div class="row  justify-content-center">
+                <div class="pagination m-2">
+                    <span class="step-links">
+                        {% if page_obj.has_previous %}
+                        <button type="button" class="btn btn-primary btn-sm"><a href="?page=1"
+                                style="color:#ffc107 ">&laquo; first</a></button>
+                        <button type="button" class="btn btn-primary btn-sm"><a
+                                href="?page={{ page_obj.previous_page_number }}"
+                                style="color:#ffc107 ">previous</a></button>
+
+                        {% endif %}
+                        {% comment %} <span class="current">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                        </span> {% endcomment %}
+                        {% if page_obj.has_next %}
+                        <button type="button" class="btn btn-primary btn-sm"><a
+                                href="?page={{ page_obj.next_page_number }}" style='color:#ffc107 '>next</a></button>
+                        <button type="button" class="btn btn-primary btn-sm"><a
+                                href="?page={{ page_obj.paginator.num_pages }}" style="color:#ffc107 ">last
+                                &raquo;</a></button>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+        {% comment %} END PAGINATION {% endcomment %}
+
+
         {% comment %} END BG IMAGE {% endcomment %}
     </div>
 
@@ -84,23 +189,13 @@
 
 
 
-    {% comment %} COUNTRY CARDS {% endcomment %}
-
-    {% comment %} <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="..." alt="Card image cap">
-        <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-        </div>
-    </div> {% endcomment %}
-
-    {% comment %} END COUNTRY CARDS {% endcomment %}
 
 
 
 
     {% comment %} RGPD {% endcomment %}
-
+    {% if user.is_authenticated%}
+    {% else %}
     <div id='cookie-bar'
         style='position:fixed; bottom:0; left:0; width: 100%;  text-align: center; padding: 12px 0; margin:0;  background-color: #343a40;  color: #919191;  font: 14px arial, sans-serif;'>
         <div style='display:inline-block;width:78%;margin:0; font-family: Arial;'>
@@ -109,8 +204,8 @@
         </div>
         <div style='width:20%;'></div>
         <button id='agree-btn' type="button" class="btn btn-success">OK</button>
-
     </div>
+    {% endif%}
     {% comment %} END RGPD {% endcomment %}
 
 

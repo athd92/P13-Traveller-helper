@@ -18,6 +18,10 @@ class Command(BaseCommand):
             clist.append(i)
 
         for country in tqdm(clist):
-            c = Country(name=country.name, alpha_2=country.alpha_2)
+            c = Country(
+                name=country.name,
+                alpha_2=country.alpha_2,
+                flag=f"../static/img/flags/flag-{country.alpha_2}.jpg",
+            )
             c.save()
         self.stdout.write(self.style.SUCCESS("Opération terminée: [OK]"))

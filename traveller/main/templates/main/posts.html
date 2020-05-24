@@ -17,14 +17,16 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static '/css/index.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/posts.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
+        <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet"> 
+
 
 </head>
 
 <body>
     {% comment %} START BG IMG {% endcomment %}
-    <div style="background: linear-gradient(rgba(119, 119, 119, 0.5),rgba(60, 66, 68, 0.5)),  url('../../static/img/background-register.jpeg')"
+    <div class="page-holder bg-cover" style="background: url('../../static/img/background-register.jpeg'); width:100%; height:auto"
         class="page-holder bg-cover">
 
 
@@ -44,7 +46,7 @@
                 <div class="row text-white">
                     <div class="col-xl-4 col-lg-4 col-md-8 col-sm-10 mx-auto text-center form ">
                         <div class="px-2">
-                            <h3 class="text-inverse m-2" id="destination">{{name}}</h3>
+                            <h3 class="text-inverse m-2" id="destination" style="font-family:Chelsea Market, cursive;'">{{name}}</h3>
                             <img src={{url}}>
 
                             <form class="justify-content-center m-5" action="{% url 'main:posts'%}" method="GET">
@@ -86,31 +88,6 @@
 
 
 
-        {% comment %} START MODAL {% endcomment %}
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}} <img src={{url}}>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        {% block postitem %}
-                        {%include './includes/postitem.html'%}
-                        {% endblock%}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        {% comment %} END MODAL {% endcomment %}
 
 
 
@@ -129,7 +106,7 @@
                     <div class="card post-card m-2">
                         <div class="card-header">
                             <div id="textbox">
-                                <h3 class="alignleft">{{post.country}} - {{post.city}}
+                                <h3 class="alignleft">{{name}} - {{post.city}}
                                     <img src={{url}} style='width:1em'>
                                 </h3>
                                 <p class="alignright">Posted: {{post.creation_date}}</p>
@@ -160,6 +137,31 @@
     </div>
 
 
+        {% comment %} START MODAL {% endcomment %}
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}} <img src={{url}}>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% block postitem %}
+                        {%include './includes/postitem.html'%}
+                        {% endblock%}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% comment %} END MODAL {% endcomment %}
 
 
 
