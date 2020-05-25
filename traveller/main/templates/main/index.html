@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.png">
-    <title>Traveller</title>
+    <title>Travelerer</title>
     <!-- Latest compiled and minified CSS -->
 
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/index.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
     <link rel="stylesheet" href="{% static 'fontawesome/css/font-awesome.min.css'%}">
-    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -41,8 +41,11 @@
             <div class="container mt-0" id='indexbox'>
                 <div class="container">
                     <div class="row text-white">
-                        <div class="col-sm">
-                            One of three columns
+                        <div class="col-sm prestext">
+                            <h2>Traveler</h2>
+                            <h5>Traveling alone or not, you may wish to meet new people during your trip.
+                                </br>For that, Travelerer Helpers lets you post messages, search events by countries and
+                                find local contacts.</h5>
                         </div>
                         <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form ">
                             <div class="px-2">
@@ -64,8 +67,11 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-sm">
-                            One of three columns
+                        <div class="col-sm prestext">
+                            <h2>Partner(s)</h2>
+                            <h5>Whether your expat and live abroad, or resident in your country, if your ready to share
+                                your local best places, local-tricks or/and a bit of your time, let Travelerers know!
+                            </h5>
                         </div>
                     </div>
                 </div>
@@ -82,22 +88,20 @@
                 <div class="pagination ">
                     <span class="step-links">
                         {% if page_obj.has_previous %}
-                        <button type="button" class="btn btn-primary btn-sm"><a href="?page=1"
-                                style="color:#ffc107 ">&laquo; first</a></button>
-                        <button type="button" class="btn btn-primary btn-sm"><a
-                                href="?page={{ page_obj.previous_page_number }}"
-                                style="color:#ffc107 ">previous</a></button>
-
+                        <a class="btn btn-primary" href="?page=1" role='button'>&laquo; First
+                        </a>
+                        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}"
+                            role='button'>&laquo; Previous
+                        </a>
                         {% endif %}
                         {% comment %} <span class="current">
                             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                         </span> {% endcomment %}
                         {% if page_obj.has_next %}
-                        <button type="button" class="btn btn-primary btn-sm"><a
-                                href="?page={{ page_obj.next_page_number }}" style='color:#ffc107 '>next</a></button>
-                        <button type="button" class="btn btn-primary btn-sm"><a
-                                href="?page={{ page_obj.paginator.num_pages }}" style="color:#ffc107 ">last
-                                &raquo;</a></button>
+                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}" role='button'>Next
+                            &raquo;</a>
+                        <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}" role='button'>Last
+                            page &raquo;</a>
                         {% endif %}
                     </span>
                 </div>
@@ -120,7 +124,6 @@
                 <div class="card m-2 indexcard" style="width: 18rem;">
                     <div class="card-body">
                         <img class='alignright' src={{c.1}}>
-
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
 
@@ -132,11 +135,14 @@
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of
                             the card's content.</p>
                         {% if c.3 == 0 %}
-                        <button type="button" class="btn btn-primary btn-sm">Create a post</button>
+                        <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>Create a post <i
+                                class="fa fa-plus-circle text-warning" aria-hidden="true"></i></a>
                         {% elif c.3 == 1 %}
-                        <button type="button" class="btn btn-primary btn-sm">See the post</button>
+                        <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>See the post</a>
+
                         {% else %}
-                        <button type="button" class="btn btn-primary btn-sm">See the posts</button>
+                        <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>See the posts </a>
+
                         {%endif%}
 
                     </div>
@@ -148,33 +154,31 @@
         {% comment %} END COUNTRY CARDS {% endcomment %}
 
         {% comment %} PAGINATION {% endcomment %}
-
-        <div class="container">
+        <div class="container mb-4 mt-2">
             <div class="row  justify-content-center">
-                <div class="pagination m-2">
+                <div class="pagination ">
                     <span class="step-links">
                         {% if page_obj.has_previous %}
-                        <button type="button" class="btn btn-primary btn-sm"><a href="?page=1"
-                                style="color:#ffc107 ">&laquo; first</a></button>
-                        <button type="button" class="btn btn-primary btn-sm"><a
-                                href="?page={{ page_obj.previous_page_number }}"
-                                style="color:#ffc107 ">previous</a></button>
-
+                        <a class="btn btn-primary" href="?page=1" role='button'>&laquo; First
+                        </a>
+                        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}"
+                            role='button'>&laquo; Previous
+                        </a>
                         {% endif %}
                         {% comment %} <span class="current">
                             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
                         </span> {% endcomment %}
                         {% if page_obj.has_next %}
-                        <button type="button" class="btn btn-primary btn-sm"><a
-                                href="?page={{ page_obj.next_page_number }}" style='color:#ffc107 '>next</a></button>
-                        <button type="button" class="btn btn-primary btn-sm"><a
-                                href="?page={{ page_obj.paginator.num_pages }}" style="color:#ffc107 ">last
-                                &raquo;</a></button>
+                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}" role='button'>Next
+                            &raquo;</a>
+                        <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}" role='button'>Last
+                            page &raquo;</a>
                         {% endif %}
                     </span>
                 </div>
             </div>
         </div>
+
 
 
         {% comment %} END PAGINATION {% endcomment %}

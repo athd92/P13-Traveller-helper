@@ -52,3 +52,13 @@
     -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
 }
+
+.post-resume-card{
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    border-style: solid;
+    border-width: 2px;
+    border-color: #343a40;
+
+}

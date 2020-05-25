@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from datetime import date
 from django.db.models import Count
 from django.core.paginator import Paginator
+from operator import itemgetter
 
 
 def index(request):
@@ -25,14 +26,19 @@ def index(request):
         choicelist.append(i)
 
     post_count = Country.objects.annotate(Count("post"))
+    
     clist = list(
-        post_count.values_list("name", "flag", "alpha_2", "post__count")
+        post_count.values_list("name", "flag", "alpha_2", "post__count", "id")
     )  # list of tuple
 
-    paginator = Paginator(clist, 6)  # Show 25 contacts per page.
+    clist = sorted(clist, key=itemgetter(3),)  # sort list by index[3] (posts)
+    clist.reverse()
 
+    paginator = Paginator(clist, 6)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+
     context = {"clist": clist, "choicelist": choicelist, "page_obj": page_obj}
 
     return render(request, "main/index.html", context)

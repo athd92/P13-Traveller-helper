@@ -1,55 +1,52 @@
-.page-holder {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    overflow: auto;
-    background: lime;
-    /* Just to visualize the extent */
-
-
-}
-
-#agree-btn {
-    font-size: 100%;
-    position: absolute;
-    bottom: 5px;
-    right: 4%;
-    padding: 0 8px;
-    margin: 0;
-}
-
-
-#indexbox {
-    background-color: rgb(231, 231, 231);
-    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
-    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
-    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
-    border-style: solid;
-    border-color: grey;
-    border-radius: 5px 5px 5px 5px;
-}
-
-.post-card {
-    width: 60vw;
-}
-
-.alignleft {
-    float: left;
-}
-
-.alignright {
-    float: right;
-}
-
-.indexcard {
-    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
-    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
-    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
-}
-
-#destination{
-    color: #343a40;
-    font-family: 'Chelsea Market', cursive;
-}
+        .page-holder {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        overflow: auto;
+        background: lime;
+        /* Just to visualize the extent */
+    }
+    
+    #agree-btn {
+        font-size: 100%;
+        position: absolute;
+        bottom: 5px;
+        right: 4%;
+        padding: 0 8px;
+        margin: 0;
+    }
+    
+    #indexbox {
+        border-radius: 0px 0px 5px 5px;
+    }
+    
+    .post-card {
+        width: 60vw;
+    }
+    
+    .alignleft {
+        float: left;
+    }
+    
+    .alignright {
+        float: right;
+    }
+    
+    .indexcard {
+        -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+        -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+        box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    }
+    
+    #destination,
+    .prestext {
+        color: #212529;
+        ;
+        font-family: 'Chelsea Market', cursive;
+    }
+    
+    #indexbox {
+        background: linear-gradient(rgba(166, 199, 243, 0.527), rgba(236, 236, 236, 0.507))
+        /* background: linear-gradient(rgba(166, 199, 243, 0.911), rgba(236, 236, 236, 0.836)), url('../../static/img/flagsbox.jpg') */
