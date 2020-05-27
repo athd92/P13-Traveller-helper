@@ -38,3 +38,16 @@ class Post(models.Model):
 
     def __repr__(self):
         return f"{self.country} {self.city} {self.start_date} {self.end_date} {self.created_by}"
+
+
+class UserAttributes(models.Model):
+    """
+    Class used to edit the user profil attributes
+    """
+    avatar = models.CharField(max_length=100)
+    last_connexion = models.DateField()
+    about = models.TextField()
+    
+
+
+

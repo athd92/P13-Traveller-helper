@@ -27,7 +27,7 @@
     {% comment %} HERE API LINKS {% endcomment %}
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -47,7 +47,6 @@
 
 
         {% comment %} START TITLE {% endcomment %}
-
         <div id="cover-caption" class="m-2">
             <div class="container mt-5">
                 <div class="row text-white">
@@ -55,8 +54,7 @@
                         <div class="px-2">
                             <h3 class="text-inverse m-2" id="destination" style="font-family:Chelsea Market, cursive;'">
                                 {{name}}</h3>
-                            <img src={{url}}  id='flagimg'>
-
+                            <img src={{url}} id='flagimg'>
                             <form class="justify-content-center m-5" action="{% url 'main:posts'%}" method="GET">
                                 {% csrf_token %}
                                 <select class="form-control" id="exampleFormControlSelect1" name="country_id"
@@ -66,9 +64,7 @@
                                     <option id='{{country.id}}' class="form-control" value="{{country.id}}">
                                         {{country.name}}</option>
                                     {% endfor %}
-
                                 </select>
-
                                 <div class="form-group">
                                 </div>
 
@@ -89,8 +85,6 @@
                 </div>
             </div>
         </div>
-
-
         {% comment %} END TITLE {% endcomment %}
 
 
@@ -99,7 +93,6 @@
 
 
         {% comment %} START POSTS {% endcomment %}
-
         {% for post in all_posts %}
         <div class="container">
             <div class="row">
@@ -109,136 +102,163 @@
                     <div class="card post-card m-2 post-resume-card">
                         {% if post.ready == False %}
                         <div class="card-header" style="background-color:#9ACD32">
-                        {% else %}
-                        <div class="card-header" style="background-color:#DC143C">
-                        {% endif%}
-                            <div id="textbox">
-                                <h3 class="alignleft" style="font-family: 'Chelsea Market', cursive;">{{name}} -
-                                    {{post.city}}
-                                    <img src={{url}} style='width:1em'>
-                                </h3>
-                                <p class="alignright">Posted: {{post.creation_date}}</p>
+                            {% else %}
+                            <div class="card-header" style="background-color:#DC143C">
+                                {% endif%}
+                                <div id="textbox">
+                                    <h3 class="alignleft" style="font-family: 'Chelsea Market', cursive;">{{name}} -
+                                        {{post.city}}
+                                        <img src={{url}} style='width:1em'>
+                                    </h3>
+                                    <p class="alignright">Posted: {{post.creation_date}}</p>
+                                </div>
                             </div>
-                        </div>
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title">Theme : {{post.interest}}</h5>
+                                            <h6 class="">Description : {{post.message}}</h6>
+                                        </div>
+                                        <div class="col">
+                                            <div style="width: 20vw; height: 20vw" id="mapContainer"
+                                                style="border-style:solid; border-color:grey"></div>
+                                        </div>
+                                        <div class="col">
+                                            <div>
+                                                <h6 class=""><strong>From :</strong> {{post.start_date}}</h6>
+                                                <h6 class=""><strong>To : </strong>{{post.end_date}}</h6>
+                                                <h6 class=""><strong>Total travelers : </strong>{{post.free_places}}
+                                                </h6>
+                                                <h6 class=""><strong>Places left : </strong>{{post.total_travelers}}
+                                                </h6>
+                                                <h6 class="h6"><strong>Status : </strong>{{post.ready}}</h6>
+                                                <h6 class=""><strong>Budget : </strong>{{post.budget}}</h6>
+                                                {% if user == post.created_by %}
+                                                <a href="#" class="btn btn-primary mt-3">Modify post
+                                                    <svg class="bi bi-pencil" width="1em" height="1em"
+                                                        viewBox="0 0 16 16" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" />
+                                                        <path fill-rule="evenodd"
+                                                            d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z" />
+                                                    </svg>
+                                                </a>
+                                                </br><a href="#" id="delete-post-button" class="btn btn-danger mt-3"
+                                                    data-toggle="modal" data-target="#exampleModalCenter">Delete post <i
+                                                        class="fa fa-ban text-warning" aria-hidden="true"></i></a>
 
-                        <div class="card-body">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col">
-                                        <h5 class="card-title">Theme : {{post.interest}}</h5>
-
-                                        <h6 class="">Description : {{post.message}}</h6>
-
-                                    </div>
-                                    <div class="col">
-                                        <div style="width: 20vw; height: 20vw" id="mapContainer"
-                                            style="border-style:solid; border-color:grey"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div>
-                                            <h6 class=""><strong>From :</strong> {{post.start_date}}</h6>
-                                            <h6 class=""><strong>To : </strong>{{post.end_date}}</h6>
-                                            <h6 class=""><strong>Total travelers : </strong>{{post.free_places}}
-                                            </h6>
-                                            <h6 class=""><strong>Places left : </strong>{{post.total_travelers}}
-                                            </h6>
-                                            <h6 class="h6"><strong>Status : </strong>{{post.ready}}</h6>
-
-                                            <h6 class=""><strong>Budget : </strong>{{post.budget}}</h6>
-                                            <a href="#" class="btn btn-primary mt-3">Contact
-                                                Travelerer</a>
-                                            <a href="#" class="btn btn-primary mt-3">See travaler's profile</a>
-                                            <a href="#" class="btn btn-warning mt-3">Create alert</a>
-                                            <a href="#" class="btn btn-danger mt-3">Delete post</a>
-                                            <a href="#" class="btn btn-danger mt-3">Delete post</a>
+                                                {% else %}
+                                                <a href="#" class="btn btn-primary mt-3">Contact traveler
+                                                    <svg class="bi bi-envelope" width="1em" height="1em"
+                                                        viewBox="0 0 16 16" fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z" />
+                                                        <path
+                                                            d="M.05 3.555C.017 3.698 0 3.847 0 4v.697l5.803 3.546L0 11.801V12c0 .306.069.596.192.856l6.57-4.027L8 9.586l1.239-.757 6.57 4.027c.122-.26.191-.55.191-.856v-.2l-5.803-3.557L16 4.697V4c0-.153-.017-.302-.05-.445L8 8.414.05 3.555z" />
+                                                    </svg>
+                                                </a>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <small class="text-muted">Posted by: {{post.created_by}}</small>
                         </div>
-                        <small class="text-muted">Posted by: {{post.created_by}}</small>
-
+                    </div>
+                    <div class="col-sm">
                     </div>
                 </div>
-                <div class="col-sm">
+            </div>
+            {% endfor %}
+            {% comment %} END POSTS {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            {% comment %} END BG IMAGE {% endcomment %}
+        </div>
+
+
+
+        {% comment %} START MODAL {% endcomment %}
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}} <img src={{url}}>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% block postitem %}
+                        {%include './includes/postitem.html'%}
+                        {% endblock%}
+                    </div>
                 </div>
             </div>
         </div>
-        {% endfor %}
+        {% comment %} END MODAL {% endcomment %}
 
 
-        {% comment %} END POSTS {% endcomment %}
+        {% comment %} DELETE MODAL {% endcomment %}
+        {% block delete-modal%}
+        {% include './includes/delete-modal.html'%}
+        {% endblock %}
+        {% comment %} END DELETE MODAL {% endcomment %}
 
 
-        {% comment %} END BG IMAGE {% endcomment %}
-    </div>
+        <script>
+            // Initialize the platform object:
+            var platform = new H.service.Platform({
+                "apikey": '{{KEY}}',
+            });
+            // Obtain the default map types from the platform object
+            var maptypes = platform.createDefaultLayers();
+            // Instantiate (and display) a map object:
+            var map = new H.Map(
+                document.getElementById('mapContainer'),
+                maptypes.vector.normal.map, {
+                    zoom: 8,
+                    center: {
+                        lng: 13.4,
+                        lat: 52.51
+                    }
+                });
+
+        </script>
 
 
-    {% comment %} START MODAL {% endcomment %}
+        {% comment %} LINKS {% endcomment %}
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.js"></script>
+        <script src="{% static '/js/posts.js'%}"></script>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}} <img src={{url}}>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {% block postitem %}
-                    {%include './includes/postitem.html'%}
-                    {% endblock%}
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    {% comment %} END MODAL {% endcomment %}
-
-
-
-<script>
-
-    // Initialize the platform object:
-    var platform = new H.service.Platform({
-        "apikey": '{{KEY}}',
-    });
-
-    // Obtain the default map types from the platform object
-    var maptypes = platform.createDefaultLayers();
-
-    // Instantiate (and display) a map object:
-    var map = new H.Map(
-        document.getElementById('mapContainer'),
-        maptypes.vector.normal.map, {
-            zoom: 8,
-            center: {
-                lng: 13.4,
-                lat: 52.51
-            }
-        });
-</script>
-
-
-    {% comment %} LINKS {% endcomment %}
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static '/js/posts.js'%}"></script>
-
-    {% comment %} END LINKS {% endcomment %}
+        {% comment %} END LINKS {% endcomment %}
 </body>
 
 </html>

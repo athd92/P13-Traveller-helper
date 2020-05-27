@@ -204,3 +204,14 @@ def send_post(request):
             return HttpResponse(form.non_field_errors)
     else:
         return render(request, "main/posts.html")
+
+
+def delete_post(request, post_id):
+    path = request.META.get("HTTP_REFERER")
+    if request.user.is_authenticated:
+        selected = Post.objects.get(id=post_id)
+        selected.delete()
+        return redirect(path)
+    else:
+        return redirect('/')
+    

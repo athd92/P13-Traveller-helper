@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static '/css/index.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/account.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
 
@@ -26,8 +26,8 @@
 
 <body>
     {% comment %} START BG IMG {% endcomment %}
-    <div style="background: linear-gradient(rgba(119, 119, 119, 0.5),rgba(60, 66, 68, 0.5)),  url('../../static/img/account.jpg')"
-        class="page-holder bg-cover">
+    {% comment %} <div style="background: linear-gradient(rgba(119, 119, 119, 0.5),rgba(60, 66, 68, 0.5)),  url('../../static/img/account-bg.jpg')"
+        class="page-holder bg-cover"> {% endcomment %}
 
 
         {% comment %} NAVBAR {% endcomment %}
@@ -42,7 +42,7 @@
 
         {% comment %} PROFILE CONTENT {% endcomment %}
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-        <div class="container">
+        <div class="container ">
             <div class="row flex-lg-nowrap">
                 <div class="col-12 col-lg-auto mb-3" style="width: 200px;">
 
@@ -52,7 +52,7 @@
                     <div class="row">
                         <div class="col mb-3">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body account-box">
                                     <div class="e-profile">
                                         <div class="row">
                                             <div class="col-12 col-sm-auto mb-3">
@@ -230,7 +230,7 @@
 
 
         {% comment %} END IMAGE BACKGROUND {% endcomment %}
-    </div>
+    {% comment %} </div> {% endcomment %}
 
     {% comment %} LINKS {% endcomment %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
