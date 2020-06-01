@@ -10,7 +10,8 @@ class Country(models.Model):
     name = models.CharField(max_length=200)
     alpha_2 = models.CharField(max_length=20)
     flag = models.CharField(max_length=200)
-    
+    resume = models.TextField()
+
     def __repr__(self):
         return f"{self.name} {self.alpha_2}"
 

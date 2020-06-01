@@ -26,9 +26,11 @@ def index(request):
         choicelist.append(i)
 
     post_count = Country.objects.annotate(Count("post"))
-    
+
     clist = list(
-        post_count.values_list("name", "flag", "alpha_2", "post__count", "id")
+        post_count.values_list(
+            "name", "flag", "alpha_2", "post__count", "id", "resume"
+        )
     )  # list of tuple
 
     clist = sorted(clist, key=itemgetter(3),)  # sort list by index[3] (posts)
@@ -37,7 +39,6 @@ def index(request):
     paginator = Paginator(clist, 6)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-
 
     context = {"clist": clist, "choicelist": choicelist, "page_obj": page_obj}
 
@@ -84,7 +85,7 @@ def register(request):
             username = form.cleaned_data.get("username")
             login(request, user)
 
-            return render(request, "main/index.html")
+            return redirect("/")
         else:
             return render(
                 request=request,
@@ -213,5 +214,5 @@ def delete_post(request, post_id):
         selected.delete()
         return redirect(path)
     else:
-        return redirect('/')
-    
+        return redirect("/")
+

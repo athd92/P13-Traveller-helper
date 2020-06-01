@@ -1,6 +1,10 @@
 $(document).ready(function() {
-    $("#flagimg").hide("slide", { direction: "left" }, 1000);
+    $('#maploader').hide()
+
 });
+
+
+
 
 $("#agree-btn").click(function() {
     $("#cookie-bar").hide();
