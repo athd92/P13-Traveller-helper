@@ -46,11 +46,50 @@
         {% comment %} END NAVBAR {% endcomment %}
 
 
-
-
         {% comment %} START TITLE {% endcomment %}
+        <div class='text-center m-5'>
+            <div class='row justify-content-center'>
+                <div class="card" style="width: 38rem;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h1 class="text-inverse m-2" id="destination" style="font-family:Chelsea Market, cursive;'">
+                                {{name}}</h1>
+                        </li>
+                        <li class="list-group-item"> <img src={{url}} id='flagimg'>
+                        </li>
+                        <li class="list-group-item">
+                            <form class="justify-content-center m-5" action="{% url 'main:posts'%}" method="GET">
+                                {% csrf_token %}
+                                <select class="form-control" id="exampleFormControlSelect1" name="country_id"
+                                    onChange="form.submit();">
+                                    {% for country in clist%}
+                                    <option id='{{country.id}}' class="form-control" value="{{country.id}}">
+                                        {{country.name}}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-group">
+                                </div>
+                                {% if user.is_authenticated %}
+                                <button type="button" class="btn btn-dark  btn-lg m-2" id='getinfos' data-toggle="modal"
+                                    data-target="#exampleModal">Create a post
+                                    <i class="fa fa-plus-circle text-warning" aria-hidden="true"></i>
+                                </button>
+                                {% else %}
+                                <a class="btn btn-success" href="/login" role="button">Login </a>
+                                <a class="btn btn-primary" href="/register" role="button">Register <i
+                                        class="fa fa-plus-circle text-warning" aria-hidden="true"></i></a>
+                                {% endif%}
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% comment %}
+
         <div id="cover-caption" class="m-2">
-            <div class="container mt-5">
+            <div class="container-fluid ">
                 <div class="row text-white">
                     <div class="col-xl-4 col-lg-4 col-md-8 col-sm-10 mx-auto text-center form ">
                         <div class="px-2">
@@ -82,17 +121,14 @@
 
                                 {% endif%}
                             </form>
+
                         </div>
                     </div>
+
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
         {% comment %} END TITLE {% endcomment %}
-
-
-
-
-
 
         {% comment %} START POSTS {% endcomment %}
         {% for post in all_posts %}
@@ -109,7 +145,7 @@
                                 {% endif%}
                                 <div id="textbox">
                                     <h3 class="alignleft" style="font-family: 'Chelsea Market', cursive;">{{name}} -
-                                        {{post.city}}
+                                        {{post.city}}{{post.id}}
                                         <img src={{url}} style='width:1em'>
                                     </h3>
                                     <p class="alignright">Posted: {{post.creation_date}}</p>
@@ -124,42 +160,7 @@
                                             <h6 class="text-justify mt-1">Description : </br>{{post.message}}</h6>
                                         </div>
                                         <div class="col" align="center">
-
-
-                                            {% comment %} MAP {% endcomment %}
-                                            <script type="text/javascript">
-                                                google.charts.load('current', {
-                                                    'packages': ['geochart'],
-                                                    // Note: you will need to get a mapsApiKey for your project.
-                                                    // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-                                                    'mapsApiKey': '{{KEY}}'
-                                                });
-                                                google.charts.setOnLoadCallback(drawRegionsMap);
-
-                                                function drawRegionsMap() {
-                                                    var data = google.visualization.arrayToDataTable([
-                                                        ['Country', 'Popularity'],
-                                                        ['{{name}}', 0],
-
-                                                    ]);
-
-                                                    var options = {};
-
-                                                    var chart = new google.visualization.GeoChart(document
-                                                        .getElementById('regions_div'));
-
-                                                    chart.draw(data, options);
-                                                }
-
-                                            </script>
                                             <h3 style="font-family: 'Chelsea Market', cursive;">WORLD MAP</h3>
-
-                                            {% comment %} LOADER {% endcomment %}
-                                            <div class="spinner-border text-success " id="maploader" role="status">
-                                                <span class="sr-only">Loading...</span>
-                                            </div>
-                                            <div class="mt-4" id="regions_div" style="width: 24vw; height: 12vw;"></div>
-
                                         </div>
                                         <div class="col">
                                             <div>
@@ -182,10 +183,9 @@
                                                             d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z" />
                                                     </svg>
                                                 </a>
-                                                </br><a href="#" id="delete-post-button" class="btn btn-danger mt-3"
+                                                </br><a href="#"  class="btn btn-danger mt-3"
                                                     data-toggle="modal" data-target="#exampleModalCenter">Delete post <i
                                                         class="fa fa-ban text-warning" aria-hidden="true"></i></a>
-
                                                 {% else %}
                                                 <a href="#" class="btn btn-primary mt-3">Contact traveler
                                                     <svg class="bi bi-envelope" width="1em" height="1em"
@@ -216,7 +216,32 @@
 
 
 
+            {% comment %} MAP {% endcomment %}
+            <script type="text/javascript">
+                google.charts.load('current', {
+                    'packages': ['geochart'],
+                    // Note: you will need to get a mapsApiKey for your project.
+                    // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+                    'mapsApiKey': '{{KEY}}'
+                });
+                google.charts.setOnLoadCallback(drawRegionsMap);
 
+                function drawRegionsMap() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Country', 'Popularity'],
+                        ['{{name}}', 0],
+
+                    ]);
+
+                    var options = {};
+
+                    var chart = new google.visualization.GeoChart(document
+                        .getElementById('regions_div'));
+
+                    chart.draw(data, options);
+                }
+
+            </script>
 
 
 

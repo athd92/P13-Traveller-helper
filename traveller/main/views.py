@@ -67,6 +67,7 @@ def login_request(request):
             else:
                 pass
         form = AuthenticationForm()
+
         return render(
             request=request,
             template_name="main/login.html",
@@ -158,14 +159,15 @@ def posts(request):
 
 def send_post(request):
     if request.user.is_authenticated:
+        form = PostForm(request.POST)
+
         if request.method == "POST":
             form = PostForm(request.POST)
             if form.is_valid():
                 country = Country.objects.get(
                     name=form.cleaned_data["country"]
                 )
-                print("COUNTRY")
-                print(country.id)
+
                 today = date.today()
                 new_post = Post(
                     country=country,
@@ -210,9 +212,10 @@ def send_post(request):
 def delete_post(request, post_id):
     path = request.META.get("HTTP_REFERER")
     if request.user.is_authenticated:
+        print("POST ID")
+        print(post_id)
         selected = Post.objects.get(id=post_id)
         selected.delete()
         return redirect(path)
     else:
         return redirect("/")
-

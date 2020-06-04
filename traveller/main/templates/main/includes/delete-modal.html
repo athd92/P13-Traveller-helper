@@ -21,12 +21,13 @@
                         <div class="modal-body">
                             <p>Sure you want to delete the message?</br> This will <strong>permanently</strong> erase the post.</br>
                             </p>
+                            <p style='display:none'>{{post.id}}</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
 
-                            <a class="btn btn-danger" href="{% url 'main:delete_post' post_id=post.id %}">Delete</a>
+                            <a class="btn btn-danger" href="" id="delete-post">Delete</a>
                                 
                         </div>
                     </div>
@@ -36,3 +37,4 @@
 
 
 {% endblock %}
+        <script src="{% static '/js/posts.js'%}"></script>
