@@ -16,8 +16,9 @@ $("#myModal").on("shown.bs.modal", function() {
     $("#myInput").trigger("focus");
 });
 
-$("#delete-post").click(function() {
+$("#del-post").click(function() {
     console.log('click')
+    console.log($("#del-post").attr('data'))
         // let entry = {
         //     post_is: $("#post_id").text(),
         // };

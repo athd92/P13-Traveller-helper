@@ -219,3 +219,15 @@ def delete_post(request, post_id):
         return redirect(path)
     else:
         return redirect("/")
+
+
+
+@requires_csrf_token
+def send_message(request):
+    """
+    Function used to send aliment infos by mail
+    """
+    if request.user.is_authenticated:
+        if request.is_ajax():
+            pass
+    pass
