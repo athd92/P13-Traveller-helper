@@ -49,7 +49,9 @@
 
 #indexbox {
     background: linear-gradient(rgba(146, 184, 233, 0.685), rgba(236, 236, 236, 0.507))
-        /* background: linear-gradient(rgba(166, 199, 243, 0.911), rgba(236, 236, 236, 0.836)), url('../../static/img/flagsbox.jpg') */
+    /* background: linear-gradient(rgba(166, 199, 243, 0.911), rgba(236, 236, 236, 0.836)), url('../../static/img/flagsbox.jpg') */
 }
 
-;
+a {
+    font-family: "Chelsea Market", cursive;
+}

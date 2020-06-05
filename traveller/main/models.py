@@ -50,5 +50,14 @@ class UserAttributes(models.Model):
     about = models.TextField()
     
 
+class Messages(models.Model):
+    '''
+    Class used to store messages send
+    '''
+    content = models.TextField()
+    origin = models.ForeignKey(User, on_delete=models.CASCADE)
+    destination = models.CharField(max_length=20)
+
+
 
 

@@ -14,22 +14,14 @@
     <title>Travelerer</title>
     <!-- Latest compiled and minified CSS -->
 
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="{% static '/css/posts.css'%}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
-
-
-    {% comment %} HERE API LINKS {% endcomment %}
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 </head>
 
 <body>
@@ -38,13 +30,11 @@
         style="background: url('../../static/img/background-register.jpeg'); width:100%; height:auto"
         class="page-holder bg-cover">
 
-
         {% comment %} NAVBAR {% endcomment %}
         {% block content %}
         {% include './includes/navbar.html' %}
         {% endblock content %}
         {% comment %} END NAVBAR {% endcomment %}
-
 
         {% comment %} START TITLE {% endcomment %}
         <div class='text-center m-5'>
@@ -75,8 +65,8 @@
                                     <i class="fa fa-plus-circle text-warning" aria-hidden="true"></i>
                                 </button>
                                 {% else %}
-                                <a class="btn btn-success" href="/login" role="button">Login </a>
-                                <a class="btn btn-primary" href="/register" role="button">Register <i
+                                <a class="btn btn-success" href="/login" role="button" >Login </a>
+                                <a class="btn btn-primary" href="/register" role="button" >Register <i
                                         class="fa fa-plus-circle text-warning" aria-hidden="true"></i></a>
                                 {% endif%}
                             </form>
@@ -85,13 +75,11 @@
                 </div>
             </div>
         </div>
-
         {% comment %}
-
 
         {% comment %} START POSTS {% endcomment %}
         {% for post in all_posts %}
-        <div class="container">
+        <div class="container mb-5">
             <div class="row">
                 <div class="col-sm col-xs col-6">
                 </div>
@@ -115,7 +103,6 @@
                                     <div class="row">
                                         <div class="col">
                                             <h5 class="card-title text-justify">Theme : {{post.interest}}</h5>
-
                                             <h6 class="text-justify mt-1">Description : </br>{{post.message}}</h6>
                                         </div>
                                         <div class="col" align="center">
@@ -142,14 +129,12 @@
                                                             d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z" />
                                                     </svg>
                                                 </a>
-                                                </br><a href="#" class="btn btn-danger mt-3" data-toggle="modal"
-                                                    data-target="#exampleModalCenter">Delete post <i
+                                                </br><a href="#" class="btn btn-danger mt-3 first-delete"
+                                                    data-toggle="modal" data-id="{{post.id}}">Delete post <i
                                                         class="fa fa-ban text-warning" aria-hidden="true"></i></a>
                                                 {% else %}
-
-
                                                 <a data-toggle="modal" style="color:white" data-target="#messageModal"
-                                                    class="btn btn-primary mt-3">Contact traveler
+                                                    class="btn btn-primary mt-3 first-message"  data-id="{{post.id}}">Contact traveler
                                                     <svg class="bi bi-envelope" width="1em" height="1em"
                                                         viewBox="0 0 16 16" fill="currentColor"
                                                         xmlns="http://www.w3.org/2000/svg">
@@ -176,14 +161,6 @@
             {% comment %} END POSTS {% endcomment %}
 
 
-
-
-
-
-
-
-
-
             {% comment %} MAP {% endcomment %}
             <script type="text/javascript">
                 google.charts.load('current', {
@@ -198,7 +175,6 @@
                     var data = google.visualization.arrayToDataTable([
                         ['Country', 'Popularity'],
                         ['{{name}}', 0],
-
                     ]);
 
                     var options = {};
@@ -209,23 +185,11 @@
                     chart.draw(data, options);
                 }
 
+                $("#del-post").on('click', ".first-delete", function () {
+                    console.log('clicked')
 
-
-                $("#del-post").click(function () {
-                            console.log('click')
-                            console.log($("#del-post").attr('name'))
-                        }
-
+                });
             </script>
-
-
-
-
-
-
-
-
-
             {% comment %} END BG IMAGE {% endcomment %}
         </div>
 
@@ -267,71 +231,50 @@
 
 
 
-{% comment %} DELETE MODAL {% endcomment %}
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-danger">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Delete posted message??</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Sure you want to delete the message?</br> This will <strong>permanently</strong> erase the post.</br>
-                            </p>
-                           
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                <a class="btn btn-danger" href="" id="del-post"  name='{{post.id}}' data-dismiss="modal">Delete {{post.id}} </a>
-                                
-                        </div>
+        {% comment %} DELETE MODAL {% endcomment %}
+        <div class="modal fade" id="DeleteModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style='display:none'>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-danger">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Delete posted message??</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Sure you want to delete the message?</br> This will <strong>permanently</strong> erase the
+                            post.</br>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a class="btn btn-danger" href="" id="del-post" name='{{post.id}}' data-dismiss="modal">Delete
+                            {{post.id}} </a>
                     </div>
                 </div>
-
-{% comment %} DELETE MODAL END {% endcomment %}
-
-
+            </div>
+            {% comment %} DELETE MODAL END {% endcomment %}
 
 
-        <script>
-            // Initialize the platform object:
-            var platform = new H.service.Platform({
-                "apikey": '{{KEY}}',
-            });
-            // Obtain the default map types from the platform object
-            var maptypes = platform.createDefaultLayers();
-            // Instantiate (and display) a map object:
-            var map = new H.Map(
-                document.getElementById('mapContainer'),
-                maptypes.vector.normal.map, {
-                    zoom: 8,
-                    center: {
-                        lng: 13.4,
-                        lat: 52.51
-                    }
-                });
-
-        </script>
 
 
-        {% comment %} LINKS {% endcomment %}
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.js"></script>
-        <script src="{% static '/js/posts.js'%}"></script>
 
-        {% comment %} END LINKS {% endcomment %}
+            {% comment %} HERE API LINKS {% endcomment %}
+            <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+            <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8">
+            </script>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous">
+            </script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous">
+            </script>
+            <script src="{% static '/js/posts.js' %}"></script>
+            {% comment %} END LINKS {% endcomment %}
 </body>
 
 </html>

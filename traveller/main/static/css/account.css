@@ -14,3 +14,7 @@ body {
     -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
 }
+
+a {
+    font-family: "Chelsea Market", cursive;
+}

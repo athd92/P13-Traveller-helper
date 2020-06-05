@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail, PostForm
 from django.contrib.auth.views import LoginView
 import pycountry
-from .models import Country, Post
+from .models import Country, Post, Messages
 from django.http import JsonResponse
 from datetime import date
 from django.db.models import Count
@@ -126,14 +126,12 @@ def account(request):
 def posts(request):
     if request.method == "GET":
         country_id = request.GET.get("country_id")
-        print(country_id)
         clist = []
         c = Country.objects.all()
         for i in c:
             clist.append(i)
         c = Country.objects.get(id=country_id)
         alpha = c.alpha_2
-        print(alpha)
         name = c.name
 
         url = f"../static/img/flags/flag-{alpha}.jpg"
@@ -209,25 +207,34 @@ def send_post(request):
         return render(request, "main/posts.html")
 
 
-def delete_post(request, post_id):
-    path = request.META.get("HTTP_REFERER")
+@requires_csrf_token
+def delete_post(request):
     if request.user.is_authenticated:
-        print("POST ID")
-        print(post_id)
-        selected = Post.objects.get(id=post_id)
-        selected.delete()
-        return redirect(path)
-    else:
-        return redirect("/")
-
+        if request.is_ajax():
+            try:
+                post_id = request.POST["post_id"]
+                selected_post = Post.objects.get(id=post_id)
+                selected_post.delete()
+                return JsonResponse({"result": "deleted"})
+            except:
+                return JsonResponse({"result": "failed"})
 
 
 @requires_csrf_token
 def send_message(request):
     """
-    Function used to send aliment infos by mail
+    Function used to send message
     """
     if request.user.is_authenticated:
         if request.is_ajax():
-            pass
-    pass
+            content = request.POST["message"]
+            origin = request.user
+            destination = request.POST.get("post_ref")
+            message = Messages.objects.create(
+                content=content, 
+                origin=origin, 
+                destination=destination
+            )
+
+            return JsonResponse({"message": "SEND OK"})
+    return JsonResponse({"failed": "failed"})
