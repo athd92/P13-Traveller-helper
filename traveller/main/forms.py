@@ -65,3 +65,4 @@ class PostForm(forms.Form):
 
     def __repr__(self):
         return f"{self.country}"
+

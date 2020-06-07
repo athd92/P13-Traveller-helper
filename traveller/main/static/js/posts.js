@@ -24,11 +24,6 @@ $(".first-delete").click(function() {
     })
 });
 
-
-
-
-
-
 function deletePost(post_id) {
     $.ajax({
         type: "POST",
@@ -95,4 +90,47 @@ function sendMessage(message, post_ref) {
             $("#error").show();
         },
     })
+}
+
+
+
+
+$(".modify-modal").click(function() {
+
+    var post_id = $(this).data("id");
+
+    // $("#DeleteModalCenter").modal()
+
+    // $('#del-post').click(function() {
+    //     deletePost(post_id);
+    // })
+
+    $.ajax({
+        type: "POST",
+        url: `${window.origin}/modify_post/`,
+        data: {
+            post_id:post_id,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        beforeSend: function() {
+        },
+        complete: function() {
+        },
+
+        success: function(data, textStatus) {
+            displayModifyModal(data)
+
+        },
+        error: function(req, err) {
+            $("#sent").hide();
+            console.log("Ajax request failed: " + err + req);
+            $("#error").show();
+        },
+    })
+});
+
+
+function displayModifyModal(data){
+
+    $('#modifyExample').modal()
 }

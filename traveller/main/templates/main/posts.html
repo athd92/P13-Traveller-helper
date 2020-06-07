@@ -15,7 +15,7 @@
     <!-- Latest compiled and minified CSS -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
-    
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
@@ -65,8 +65,8 @@
                                     <i class="fa fa-plus-circle text-warning" aria-hidden="true"></i>
                                 </button>
                                 {% else %}
-                                <a class="btn btn-success" href="/login" role="button" >Login </a>
-                                <a class="btn btn-primary" href="/register" role="button" >Register <i
+                                <a class="btn btn-success" href="/login" role="button">Login </a>
+                                <a class="btn btn-primary" href="/register" role="button">Register <i
                                         class="fa fa-plus-circle text-warning" aria-hidden="true"></i></a>
                                 {% endif%}
                             </form>
@@ -92,10 +92,15 @@
                                 {% endif%}
                                 <div id="textbox">
                                     <h3 class="alignleft" style="font-family: 'Chelsea Market', cursive;">{{name}} -
-                                        {{post.city}}{{post.id}}
+                                        {{post.city}}
                                         <img src={{url}} style='width:1em'>
                                     </h3>
-                                    <p class="alignright">Posted: {{post.creation_date}}</p>
+                                    {% if anwsers %}
+                                    <p class="alignright">Posted: {{post.creation_date}}</br>Awnsers : </p>
+                                    {% else %}
+                                    <p class="alignright">Posted: {{post.creation_date}}</br>No awnsers yet </p>
+                                    {%endif%}
+
                                 </div>
                             </div>
                             <div class="card-body">
@@ -106,7 +111,11 @@
                                             <h6 class="text-justify mt-1">Description : </br>{{post.message}}</h6>
                                         </div>
                                         <div class="col" align="center">
-                                            <h3 style="font-family: 'Chelsea Market', cursive;">WORLD MAP</h3>
+                                            <h5>See on Map</h5>
+                                            </br>
+                                            <a href="#" class="btn btn-success mt-3 first-delete" data-toggle="modal"
+                                                data-id="{{post.id}}">Locate on map <i class="fa fa-ban text-warning"
+                                                    aria-hidden="true"></i></a>
                                         </div>
                                         <div class="col">
                                             <div>
@@ -119,7 +128,10 @@
                                                 <h6 class="h6"><strong>Status : </strong>{{post.ready}}</h6>
                                                 <h6 class=""><strong>Budget : </strong>{{post.budget}}</h6>
                                                 {% if user == post.created_by %}
-                                                <a href="#" class="btn btn-primary mt-3">Modify post
+
+
+                                                <a href="#" class="btn btn-primary mt-3 modify-modal" data-id={{post.id}} data-toggle="modal"
+                                                    data-target="#">Modify post
                                                     <svg class="bi bi-pencil" width="1em" height="1em"
                                                         viewBox="0 0 16 16" fill="currentColor"
                                                         xmlns="http://www.w3.org/2000/svg">
@@ -134,7 +146,8 @@
                                                         class="fa fa-ban text-warning" aria-hidden="true"></i></a>
                                                 {% else %}
                                                 <a data-toggle="modal" style="color:white" data-target="#messageModal"
-                                                    class="btn btn-primary mt-3 first-message"  data-id="{{post.id}}">Contact traveler
+                                                    class="btn btn-primary mt-3 first-message"
+                                                    data-id="{{post.id}}">Contact traveler
                                                     <svg class="bi bi-envelope" width="1em" height="1em"
                                                         viewBox="0 0 16 16" fill="currentColor"
                                                         xmlns="http://www.w3.org/2000/svg">
@@ -189,6 +202,7 @@
                     console.log('clicked')
 
                 });
+
             </script>
             {% comment %} END BG IMAGE {% endcomment %}
         </div>
@@ -211,6 +225,104 @@
                         {% block postitem %}
                         {%include './includes/postitem.html'%}
                         {% endblock%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} END MODAL {% endcomment %}
+
+
+
+        {% comment %} START MODAL MODIFY {% endcomment %}
+        <div class="modal fade" id="modifyExample" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create a new post for {{name}} <img src={{url}}>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'main:send_post'%}" method='POST'>
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputEmail4" name='city'>City</label>
+                                    <input type="text" class="form-control" name='city' required='required' value="{{post.interest}}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="country" name="country">Country</label>
+                                    <input type="text" class="form-control" name="country" required='required'
+                                        value="{{name}}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="title" name='title'>Title</label>
+                                    <input type="text" class="form-control" name='title' required='required'>
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="title" name='interest'>Interest</label>
+                                    <input type="text" class="form-control" name='interest' required='required'>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="budget" name='interest'>Budget</label>
+                                    <input type="text" class="form-control" name='budget' required='required'>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="start" class="col-2 col-form-label" name='start'>Starts</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="date" name='start' value="2020-08-19"
+                                        id="example-date-input">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="end" class="col-2 col-form-label" name='end'>Ends</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="date" name='end' value="2020-08-19"
+                                        id="example-date-input">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="ready" name="ready">Ready to go:</label>
+                                    <select class="form-control">
+                                        <option name="ready" selected>Not yet...</option>
+                                        <option name="ready">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2 m-2">
+                                    <label for="total">Traveler(s)</label>
+                                    <input type="text" class="form-control" name="total" id="total" placeholder="1"
+                                        required='required'>
+                                </div>
+                                <div class="form-group col-md-2  m-2">
+                                    <label for="wanted">Expected</label>
+                                    <input type="text" class="form-control" name="wanted" id="wanted"
+                                        required='required'>
+                                </div>
+                                <div class="form-group col-md-2 m-2">
+                                    <label for="free">Free</label>
+                                    <input type="text" class="form-control" name="free" id="free" required='required'>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="message" name="message">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+                            </div>
+
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Send post</button>
+
+                        </form>
                     </div>
                 </div>
             </div>

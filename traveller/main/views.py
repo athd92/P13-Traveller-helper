@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import SearchForm
-from django.views.decorators.csrf import requires_csrf_token
+from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail, PostForm
@@ -13,7 +13,7 @@ from datetime import date
 from django.db.models import Count
 from django.core.paginator import Paginator
 from operator import itemgetter
-
+import base64
 
 def index(request):
     """
@@ -231,10 +231,41 @@ def send_message(request):
             origin = request.user
             destination = request.POST.get("post_ref")
             message = Messages.objects.create(
-                content=content, 
-                origin=origin, 
-                destination=destination
+                content=content, origin=origin, destination=destination
             )
 
             return JsonResponse({"message": "SEND OK"})
     return JsonResponse({"failed": "failed"})
+
+
+@requires_csrf_token
+def modify_post(request):
+    """
+    Function defined to modify a specific post
+    """
+    if request.user.is_authenticated:
+        if request.is_ajax():
+            post_id = request.POST["post_id"]
+            print("")
+            print(post_id)
+            post = Post.objects.filter(id=post_id).values()
+            post = post[0]
+
+            context = {
+                "post": post,
+            }
+            return JsonResponse(context)
+
+
+@requires_csrf_token
+def upload_img(request):
+    """
+    Function defined to upload profile image
+    """
+    if request.user.is_authenticated:
+        if request.is_ajax():
+            img64 = request.POST.get("img64")
+            print(img64)
+
+            return JsonResponse({"ok": "ok"})
+
