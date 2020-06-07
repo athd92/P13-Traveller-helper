@@ -9,6 +9,10 @@ $(document).ready(function () {
 });
 
 
+
+
+
+
 function getBase64(file) {
 
     var reader = new FileReader();

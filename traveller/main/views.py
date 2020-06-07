@@ -7,13 +7,15 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail, PostForm
 from django.contrib.auth.views import LoginView
 import pycountry
-from .models import Country, Post, Messages
+from .models import Country, Post, Messages, UserAttributes
 from django.http import JsonResponse
 from datetime import date
 from django.db.models import Count
 from django.core.paginator import Paginator
 from operator import itemgetter
 import base64
+from datetime import date
+
 
 def index(request):
     """
@@ -115,9 +117,14 @@ def logout_request(request):
 
 def account(request):
     if request.user.is_authenticated:
+        try:
+            img = UserAttributes.objects.filter(owner=request.user).latest("id")
+            img = img.img
+        except:
+            img = ''
         name = request.user.username
         email = request.user.email
-        context = {"name": name, "email": email}
+        context = {"name": name, "email": email, 'img':img}
         return render(request, "main/account.html", context)
     else:
         return redirect("/")
@@ -265,7 +272,12 @@ def upload_img(request):
     if request.user.is_authenticated:
         if request.is_ajax():
             img64 = request.POST.get("img64")
-            print(img64)
+            user = request.user
+            today = date.today()
+            new_img = UserAttributes.objects.create(
+                owner=user, avatar="",
+                last_connexion=today,
+                about="", img=img64
+            )
 
             return JsonResponse({"ok": "ok"})
-

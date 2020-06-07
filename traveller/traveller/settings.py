@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'traveller',
     'main',
     'crispy_forms',
-    'bootstrap4'
+    'bootstrap4',
+    'admin_honeypot'
 ]
 
 MIDDLEWARE = [

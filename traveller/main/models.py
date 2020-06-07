@@ -45,10 +45,12 @@ class UserAttributes(models.Model):
     """
     Class used to edit the user profil attributes
     """
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     avatar = models.CharField(max_length=100)
     last_connexion = models.DateField()
     about = models.TextField()
-    
+    img = models.TextField()
+
 
 class Messages(models.Model):
     '''
