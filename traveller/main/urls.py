@@ -16,5 +16,7 @@ urlpatterns = [
     path("send_message/", views.send_message, name="send_message"),
     path("modify_post/", views.modify_post, name="modify_post"),
     path("upload_img/", views.upload_img, name="upload_img"),
+    path("messages/", views.messages, name="messages"),
+    path("display_map/", views.display_map, name="display_map"),
 
 ]

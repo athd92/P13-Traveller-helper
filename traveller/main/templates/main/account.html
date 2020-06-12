@@ -46,10 +46,8 @@
         <div class="container ">
             <div class="row flex-lg-nowrap">
                 <div class="col-12 col-lg-auto mb-3" style="width: 200px;">
-
                 </div>
-
-                <div class="col">
+                <div class="col mt-5">
                     <div class="row">
                         <div class="col mb-3">
                             <div class="card">
@@ -60,9 +58,10 @@
                                                 <div class="mx-auto" style="width: 140px;">
                                                     <div class="d-flex justify-content-center align-items-center rounded"
                                                         style="height: 140px; background-color: rgb(233, 236, 239);">
-                                                        {% if img %}                                                        
+                                                        {% if img %}
                                                         <div class='preview'>
-                                                            <img src="{{img}}" id="profile-img" width="100" height="100">
+                                                            <img src="{{img}}" id="profile-img" width="100"
+                                                                height="100">
                                                         </div>
                                                         {% else %}
                                                         <span
@@ -77,11 +76,14 @@
                                                     <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{name}}</h4>
                                                     <p class="mb-0">{{email}}</p>
                                                     <div class="text-muted"><small>Last seen 2 hours ago</small></div>
-                                                    <div class="mt-2">
-                                                        <button class="btn btn-primary" type="button">
-                                                            <i class="fa fa-fw fa-camera"></i>
-                                                            <span>Change Photo</span>
-                                                        </button>
+                                                    <div class="container">
+                                                        <form method="post" action="" enctype="multipart/form-data"
+                                                            id="myform">                                                            <div>
+                                                                <input type="file" id="file" name="file" />
+                                                                <input type="button" class="btn btn-primary button" value="Upload image "
+                                                                    name="upload-img" id="but_upload">
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                                 <div class="text-center text-sm-right">
@@ -136,7 +138,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
+                                                    {% comment %} <div class="row">
                                                         <div class="col-12 col-sm-6 mb-3">
                                                             <div class="mb-2"><b>Change Password</b></div>
                                                             <div class="row">
@@ -200,7 +202,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> {% endcomment %}
                                                     <div class="row">
                                                         <div class="col d-flex justify-content-end">
                                                             <button class="btn btn-primary" type="submit">Save
@@ -227,17 +229,6 @@
         </div>
 
         {% comment %} END PROFILE CONTENT {% endcomment %}
-        <div class="container">
-            <form method="post" action="" enctype="multipart/form-data" id="myform">
-                <div class='preview'>
-                    <img src="" id="profile-img" width="100" height="100">
-                </div>
-                <div>
-                    <input type="file" id="file" name="file" />
-                    <input type="button" class="button" value="Upload" name="upload-img" id="but_upload">
-                </div>
-            </form>
-        </div>
 
         {% comment %} END IMAGE BACKGROUND {% endcomment %}
         {% comment %}

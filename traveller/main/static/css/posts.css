@@ -62,3 +62,10 @@
 a {
     font-family: "Chelsea Market", cursive;
 }
+
+#map-div {
+    font-family: Chelsea Market, cursive;
+    color: azure;
+    font-size: 5vw;
+    background-repeat: no-repeat;
+}

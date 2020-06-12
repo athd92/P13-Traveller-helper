@@ -45,6 +45,7 @@ class UserAttributes(models.Model):
     """
     Class used to edit the user profil attributes
     """
+
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     avatar = models.CharField(max_length=100)
     last_connexion = models.DateField()
@@ -53,13 +54,11 @@ class UserAttributes(models.Model):
 
 
 class Messages(models.Model):
-    '''
+    """
     Class used to store messages send
-    '''
+    """
+    title = models.CharField(max_length=200)
+    created_at = models.DateField(auto_now=True)
     content = models.TextField()
-    origin = models.ForeignKey(User, on_delete=models.CASCADE)
-    destination = models.CharField(max_length=20)
-
-
-
-
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_id = models.ForeignKey(Post,  on_delete=models.CASCADE)

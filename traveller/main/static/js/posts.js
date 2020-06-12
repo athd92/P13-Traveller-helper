@@ -1,6 +1,19 @@
 $(document).ready(function() {
     $("#maploader").hide();
+
 });
+
+
+$('#open-map').click(function() {
+    var city = $(this).data("id");
+    console.log(city)
+    displayMap(city)
+})
+
+
+
+
+
 
 $("#agree-btn").click(function() {
     $("#cookie-bar").hide();
@@ -14,11 +27,8 @@ $("#myModal").on("shown.bs.modal", function() {
 
 
 $(".first-delete").click(function() {
-
     var post_id = $(this).data("id");
-
     $("#DeleteModalCenter").modal()
-
     $('#del-post').click(function() {
         deletePost(post_id);
     })
@@ -32,15 +42,9 @@ function deletePost(post_id) {
             post_id: post_id,
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-        beforeSend: function() {
-
-        },
-        complete: function() {
-
-        },
-
+        beforeSend: function() {},
+        complete: function() {},
         success: function(data, textStatus) {
-
             console.log(data)
             location.reload();
         },
@@ -92,9 +96,6 @@ function sendMessage(message, post_ref) {
     })
 }
 
-
-
-
 $(".modify-modal").click(function() {
 
     var post_id = $(this).data("id");
@@ -109,13 +110,11 @@ $(".modify-modal").click(function() {
         type: "POST",
         url: `${window.origin}/modify_post/`,
         data: {
-            post_id:post_id,
+            post_id: post_id,
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-        beforeSend: function() {
-        },
-        complete: function() {
-        },
+        beforeSend: function() {},
+        complete: function() {},
 
         success: function(data, textStatus) {
             displayModifyModal(data)
@@ -130,7 +129,73 @@ $(".modify-modal").click(function() {
 });
 
 
-function displayModifyModal(data){
 
-    $('#modifyExample').modal()
+
+function displayMap(city) {
+
+    $.ajax({
+        type: "POST",
+        url: `${window.origin}/display_map/`,
+        data: {
+            city: city,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        },
+        beforeSend: function() {
+
+        },
+        complete: function() {
+
+        },
+
+        success: function(data) {
+            console.log(data)
+            $('#displayMap').modal()
+            $('.divmap').append('<div id="map">' + 'map...' + '</div>');
+            initMap(40000, 25000, data);
+        },
+        error: function(req, err) {
+            $("#sent").hide();
+            console.log("Ajax request failed: " + err + req);
+            $("#error").show();
+        },
+    })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function initMap(latitude, longitude, data) { // initialisation of googlemaps   
+    // map options    
+    var options = {
+        zoom: 11,
+        center: { lat: latitude, lng: longitude },
+    }
+
+    // new map
+    var map = new google.maps.Map(document.getElementById('map'), options);
+
+    // add marker
+    var marker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: map
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+    infowindow.setContent(data.address);
+    infowindow.open(map, marker);
+
+
+};

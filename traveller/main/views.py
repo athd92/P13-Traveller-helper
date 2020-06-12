@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail, PostForm
 from django.contrib.auth.views import LoginView
 import pycountry
-from .models import Country, Post, Messages, UserAttributes
+from main.models import Country, Post, Messages, UserAttributes
 from django.http import JsonResponse
 from datetime import date
 from django.db.models import Count
@@ -21,6 +21,8 @@ def index(request):
     """
     This function returns the  template
     """
+    user = request.user
+    messages = Messages.objects.filter(author=user.id)
     clist = []
     choicelist = []
     c = Country.objects.all()
@@ -42,7 +44,12 @@ def index(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    context = {"clist": clist, "choicelist": choicelist, "page_obj": page_obj}
+    context = {
+        "clist": clist,
+        "choicelist": choicelist,
+        "page_obj": page_obj,
+        "mesages": messages,
+    }
 
     return render(request, "main/index.html", context)
 
@@ -118,13 +125,15 @@ def logout_request(request):
 def account(request):
     if request.user.is_authenticated:
         try:
-            img = UserAttributes.objects.filter(owner=request.user).latest("id")
+            img = UserAttributes.objects.filter(owner=request.user).latest(
+                "id"
+            )
             img = img.img
-        except:
-            img = ''
+        except ObjectDoesNotExist:
+            img = ""
         name = request.user.username
         email = request.user.email
-        context = {"name": name, "email": email, 'img':img}
+        context = {"name": name, "email": email, "img": img}
         return render(request, "main/account.html", context)
     else:
         return redirect("/")
@@ -143,13 +152,10 @@ def posts(request):
 
         url = f"../static/img/flags/flag-{alpha}.jpg"
         user = request.user
-        try:
-            posts = Post.objects.filter(country__id=c.id)
-        except:
-            posts = None
-
+        messages = Messages.objects.all()
         all_posts = Post.objects.filter(country__id=c.id)
         context = {
+            "messages": messages,
             "url": url,
             "user": user,
             "form": "form",
@@ -173,7 +179,6 @@ def send_post(request):
                     name=form.cleaned_data["country"]
                 )
 
-                today = date.today()
                 new_post = Post(
                     country=country,
                     city=form.cleaned_data["city"],
@@ -223,7 +228,7 @@ def delete_post(request):
                 selected_post = Post.objects.get(id=post_id)
                 selected_post.delete()
                 return JsonResponse({"result": "deleted"})
-            except:
+            except EmptyResultSet:
                 return JsonResponse({"result": "failed"})
 
 
@@ -235,10 +240,11 @@ def send_message(request):
     if request.user.is_authenticated:
         if request.is_ajax():
             content = request.POST["message"]
-            origin = request.user
-            destination = request.POST.get("post_ref")
+            author = request.user
+            post_ref = request.POST.get("post_ref")
+            post_id = Post.objects.get(id=post_ref)
             message = Messages.objects.create(
-                content=content, origin=origin, destination=destination
+                content=content, author=author, post_id=post_id
             )
 
             return JsonResponse({"message": "SEND OK"})
@@ -253,8 +259,6 @@ def modify_post(request):
     if request.user.is_authenticated:
         if request.is_ajax():
             post_id = request.POST["post_id"]
-            print("")
-            print(post_id)
             post = Post.objects.filter(id=post_id).values()
             post = post[0]
 
@@ -275,9 +279,32 @@ def upload_img(request):
             user = request.user
             today = date.today()
             new_img = UserAttributes.objects.create(
-                owner=user, avatar="",
+                owner=user,
+                avatar="",
                 last_connexion=today,
-                about="", img=img64
+                about="",
+                img=img64,
             )
 
             return JsonResponse({"ok": "ok"})
+
+
+def messages(request):
+    user = request.user
+    if request.user.is_authenticated:
+        user_posts = Post.objects.filter(created_by=user.id)
+        messages = Messages.objects.filter(post_id__in=user_posts)
+        context = {"messages": messages}
+
+    return render(request, "main/messages.html", context)
+
+
+@requires_csrf_token
+def display_map(request):
+    if request.user.is_authenticated:
+        if request.is_ajax():
+            try:
+                city = request.POST["city"]
+                return JsonResponse({"result": "OK"})
+            except ValueError:
+                return JsonResponse({"result": "failed"})
