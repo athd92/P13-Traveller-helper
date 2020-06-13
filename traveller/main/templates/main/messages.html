@@ -41,9 +41,9 @@
 
 
 {% comment %} START MESSAGE {% endcomment %}
+{% if count != 0 %}
 {% for message in messages %}
-
-<div class="card mr-3 ml-3 mt-2 mb-2 ">
+<div class="card mr-5 ml-5 mt-2 mb-2 ">
   <div class="card-header"><h4>{{message.title}}</h4>
   <p class="card-text">Created: {{message.created_at}}</p>
       <p class="card-text">Posted by: {{message.author}}</p>
@@ -56,6 +56,11 @@
   </div>
 </div>
  {% endfor %}
+ {% else %}
+ <div class="col-12 " align="center">
+<h1 class='container' style='color:white; margin-top:10vw'>No messages yet...</h1>
+</div>
+{% endif %}
 {% comment %} END MESSAGE {% endcomment %}
 
 

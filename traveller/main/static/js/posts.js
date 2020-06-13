@@ -1,16 +1,18 @@
 $(document).ready(function() {
     $("#maploader").hide();
-
 });
 
 
-$('#open-map').click(function() {
+$('.open-map').click(function() {
     var city = $(this).data("id");
     console.log(city)
     displayMap(city)
+    $('#close-map').click(function () {
+        console.log('CLOSE')
+    $(".divmap").empty();
+    });
+    
 })
-
-
 
 
 
@@ -150,8 +152,9 @@ function displayMap(city) {
         success: function(data) {
             console.log(data)
             $('#displayMap').modal()
-            $('.divmap').append('<div id="map">' + 'map...' + '</div>');
-            initMap(40000, 25000, data);
+            $('.divmap').append('<div id="map"></div>');
+            initMap();
+
         },
         error: function(req, err) {
             $("#sent").hide();
@@ -171,31 +174,81 @@ function displayMap(city) {
 
 
 
+var map;
+function initMap() {
+    console.log('map')
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: -34.397, lng: 150.644 },
+    zoom: 8
+  });
+  console.log("fini")
+}
 
 
 
 
 
+// function initMap(latitude, longitude, data) { // initialisation of googlemaps   
+//     // map options    
+//     var options = {
+//         zoom: 11,
+//         center: { lat: latitude, lng: longitude },
+//     }
 
-function initMap(latitude, longitude, data) { // initialisation of googlemaps   
-    // map options    
-    var options = {
-        zoom: 11,
-        center: { lat: latitude, lng: longitude },
+//     // new map
+//     var map = new google.maps.Map(document.getElementById('map'), options);
+
+//     // add marker
+//     var marker = new google.maps.Marker({
+//         position: { lat: latitude, lng: longitude },
+//         map: map
+//     });
+
+//     var infowindow = new google.maps.InfoWindow();
+//     infowindow.setContent(data.address);
+//     infowindow.open(map, marker);
+
+
+// };
+
+
+
+
+// map function ajax
+$(document).ready(function() {
+    var map = null;
+    var myMarker;
+    var myLatlng;
+  
+    function initializeGMap(lat, lng) {
+      myLatlng = new google.maps.LatLng(lat, lng);
+  
+      var myOptions = {
+        zoom: 12,
+        zoomControl: true,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+  
+      map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  
+      myMarker = new google.maps.Marker({
+        position: myLatlng
+      });
+      myMarker.setMap(map);
     }
-
-    // new map
-    var map = new google.maps.Map(document.getElementById('map'), options);
-
-    // add marker
-    var marker = new google.maps.Marker({
-        position: { lat: latitude, lng: longitude },
-        map: map
+  
+    // Re-init map before show modal
+    $('#myModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      initializeGMap(button.data('lat'), button.data('lng'));
+      $("#location-map").css("width", "100%");
+      $("#map_canvas").css("width", "100%");
     });
-
-    var infowindow = new google.maps.InfoWindow();
-    infowindow.setContent(data.address);
-    infowindow.open(map, marker);
-
-
-};
+  
+    // Trigger map resize event after modal shown
+    $('#myModal').on('shown.bs.modal', function() {
+      google.maps.event.trigger(map, "resize");
+      map.setCenter(myLatlng);
+    });
+  });

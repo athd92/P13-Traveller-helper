@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import SearchForm
 from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
+from django.contrib.auth.models import User
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail, PostForm
@@ -15,6 +16,7 @@ from django.core.paginator import Paginator
 from operator import itemgetter
 import base64
 from datetime import date
+import os
 
 
 def index(request):
@@ -94,6 +96,15 @@ def register(request):
             user = form.save()
             username = form.cleaned_data.get("username")
             login(request, user)
+            today = date.today()
+            user_att = UserAttributes(
+                owner=user,
+                avatar="",
+                about="",
+                img="",
+                last_connexion=today
+            )
+            user_att.save()
 
             return redirect("/")
         else:
@@ -154,7 +165,19 @@ def posts(request):
         user = request.user
         messages = Messages.objects.all()
         all_posts = Post.objects.filter(country__id=c.id)
+        poster_pictures = {}
+        for i in all_posts:
+            user_instance = User.objects.get(username=i.created_by)
+            try:
+                user_attribut = UserAttributes.objects.filter(
+                    owner=user_instance
+                ).latest("id")
+                poster_pictures[i.created_by] = user_attribut.img
+            except:
+                poster_pictures[i.created_by] = ""
+
         context = {
+            "poster_pictures": poster_pictures,
             "messages": messages,
             "url": url,
             "user": user,
@@ -294,9 +317,11 @@ def messages(request):
     if request.user.is_authenticated:
         user_posts = Post.objects.filter(created_by=user.id)
         messages = Messages.objects.filter(post_id__in=user_posts)
-        context = {"messages": messages}
-
-    return render(request, "main/messages.html", context)
+        count = Messages.objects.filter(post_id__in=user_posts).count()
+        context = {"messages": messages, "count": count}
+        return render(request, "main/messages.html", context)
+    else:
+        return redirect("/")
 
 
 @requires_csrf_token
