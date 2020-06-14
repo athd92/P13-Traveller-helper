@@ -18,9 +18,10 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="{% static '/css/index.css'%}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Antone">
     <link rel="stylesheet" href="{% static 'fontawesome/fontawesome/css/font-awesome.min.css'%}">
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 
 <body>
@@ -37,7 +38,8 @@
 
         {% comment %} SEARCH {% endcomment %}
 
-        <div id="cover-caption" class="mb-3">
+        <div id="cover-caption" class="mb-3" >
+
             <div class="container mt-0" id='indexbox'>
                 <div class="container">
                     <div class="row text-white">
@@ -82,7 +84,7 @@
 
         {% comment %} PAGINATION {% endcomment %}
 
-        <div class="container">
+        <div class="container" >
             <div class="row  justify-content-center">
                 <div class="pagination ">
                     <span class="step-links">
@@ -118,9 +120,9 @@
 
         {% comment %} COUNTRY CARDS {% endcomment %}
         <div class="container">
-            <div class="row  justify-content-center">
+            <div class="row  justify-content-center" >
                 {% for c in page_obj %}
-                <div class="card m-2 indexcard" style="width: 18rem;">
+                <div class="card m-2 indexcard animated fadeInUp" style="width: 18rem;">
                     <div class="card-body">
                         <img class='alignright' src={{c.1}}>
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0}}</h5>
@@ -176,14 +178,16 @@
                 </div>
             </div>
         </div>
-
-
-
         {% comment %} END PAGINATION {% endcomment %}
+
+
+
 
 
         {% comment %} END BG IMAGE {% endcomment %}
     </div>
+
+
 
 
 
@@ -209,11 +213,6 @@
     </div>
     {% endif%}
     {% comment %} END RGPD {% endcomment %}
-
-
-
-
-
     {% comment %} LINKS {% endcomment %}
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -223,6 +222,8 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
     <script src="{% static '/js/index.js'%}"></script>
+
+    <script>AOS.init();</script>
 
     {% comment %} END LINKS {% endcomment %}
 </body>
