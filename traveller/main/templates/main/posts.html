@@ -22,7 +22,10 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/posts.css'%}">
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
 
-
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDj-umfEPU-98fAaKqvapfiXHKQp_iJ57c&callback=initMap">
+</script>
+      
 
 
 </head>
@@ -128,7 +131,7 @@
                                             {% endcomment %}
 
                                             <button type="button" class="btn btn-success" data-toggle="modal"
-                                                data-target="#myModal" data-lat='21.03' data-lng='105.85'>
+                                                data-target="#myModal" data-country={{name}} data-city={{post.city}}>
                                                 Open map
                                             </button>
 
@@ -139,9 +142,15 @@
                                                 <h6 class=""><strong>Posted by :</strong> {{post.created_by}}
                                                     {% for key, value in poster_pictures.items %}
                                                     {% if key == post.created_by  %}
+                                                    {% if value != "" %}
                                                     <img src={{value}} alt="Profile Picture"
                                                         class="img-responsive img-rounded m-3"
                                                         style="max-height: 30px; max-width: 30px;"></h6>
+                                                        {% else %}
+                                                    <img src={% static '/img/default-avatar.png' %} alt="Profile Picture"
+                                                        class="img-responsive img-rounded m-3"
+                                                        style="max-height: 30px; max-width: 30px;"></h6>
+                                                        {% endif %}
                                                 {% else %}
                                                 {% endif %}
                                                 {%endfor%}

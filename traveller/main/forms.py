@@ -1,21 +1,34 @@
-
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 
 class SearchForm(forms.Form):
-    '''Form used for general query'''
+    """Form used for general query"""
+
     search = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'inputForm','placeholder':'Ex: Paris'}), label=False)
+        widget=forms.TextInput(
+            attrs={"class": "inputForm", "placeholder": "Ex: Paris"}
+        ),
+        label=False,
+    )
+
+
+class ProfilForm(forms.Form):
+    """Form used for profil infos"""
+
+    name = forms.CharField(max_length=100)
+    username = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    about = forms.Textarea()
 
 
 class UserFormWithEmail(UserCreationForm):
-    '''Class used to register with email'''
+    """Class used to register with email"""
 
     email = forms.EmailField(required=True)
     age = forms.DecimalField(max_digits=2, min_value=18, decimal_places=0)
-    
+
     def __init__(self, *args, **kwargs):
         super(UserFormWithEmail, self).__init__(*args, **kwargs)
 
@@ -35,6 +48,7 @@ class PostForm(forms.Form):
     """
     Class used to define a post
     """
+
     country = forms.CharField(max_length=200)
     city = forms.CharField(max_length=200)
     total = forms.DecimalField(max_digits=4, decimal_places=0)
@@ -49,18 +63,18 @@ class PostForm(forms.Form):
 
     def save(self, commit=True):
 
-        country = self.country.cleaned_data['country']
-        city = self.city.cleaned_data['city']
-        total = self.total.cleaned_data['total']
-        wanted = self.wanted.cleaned_data['wanted']
-        free = self.free.cleaned_data['free']
-        interest = self.interest.cleaned_data['interest']
-        title = self.title.cleaned_data['title']
-        message = self.message.cleaned_data['message']
-        start = self.start.cleaned_data['start']
-        end = self.end.cleaned_data['end']
-        budget = self.budget.cleaned_data['budget']
-        
+        country = self.country.cleaned_data["country"]
+        city = self.city.cleaned_data["city"]
+        total = self.total.cleaned_data["total"]
+        wanted = self.wanted.cleaned_data["wanted"]
+        free = self.free.cleaned_data["free"]
+        interest = self.interest.cleaned_data["interest"]
+        title = self.title.cleaned_data["title"]
+        message = self.message.cleaned_data["message"]
+        start = self.start.cleaned_data["start"]
+        end = self.end.cleaned_data["end"]
+        budget = self.budget.cleaned_data["budget"]
+
         return self.country
 
     def __repr__(self):

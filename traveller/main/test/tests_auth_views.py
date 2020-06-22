@@ -66,7 +66,7 @@ class TestRegister(TestCase):
 class LoginTestView(TestCase):
     '''Class for login viw testing'''
 
-    def setUp(self):        
+    def setUp(self):
         self.user = User.objects.create_user(
             email='test@test.com',
             username='antoine',
@@ -115,3 +115,4 @@ class LogoutTestView(TestCase):
     def test_logout_redirect(self):
         response = self.client.get('/logout/')
         self.assertEqual(response.url, '/')
+

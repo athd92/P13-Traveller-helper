@@ -1,12 +1,14 @@
 from django.http import HttpResponse
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import SearchForm
 from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import UserFormWithEmail, PostForm
+from .forms import UserFormWithEmail, PostForm, ProfilForm
 from django.contrib.auth.views import LoginView
+from .geomap import GeoMaps
 import pycountry
 from main.models import Country, Post, Messages, UserAttributes
 from django.http import JsonResponse
@@ -98,11 +100,7 @@ def register(request):
             login(request, user)
             today = date.today()
             user_att = UserAttributes(
-                owner=user,
-                avatar="",
-                about="",
-                img="",
-                last_connexion=today
+                owner=user, avatar="", about="", img="", last_connexion=today
             )
             user_att.save()
 
@@ -140,7 +138,7 @@ def account(request):
                 "id"
             )
             img = img.img
-        except ObjectDoesNotExist:
+        except:
             img = ""
         name = request.user.username
         email = request.user.email
@@ -213,6 +211,7 @@ def send_post(request):
                     message=form.cleaned_data["message"],
                     start_date=form.cleaned_data["start"],
                     end_date=form.cleaned_data["end"],
+                    budget=form.cleaned_data["budget"],
                     ready=False,
                     created_by=request.user,
                 )
@@ -251,7 +250,7 @@ def delete_post(request):
                 selected_post = Post.objects.get(id=post_id)
                 selected_post.delete()
                 return JsonResponse({"result": "deleted"})
-            except EmptyResultSet:
+            except:
                 return JsonResponse({"result": "failed"})
 
 
@@ -262,12 +261,12 @@ def send_message(request):
     """
     if request.user.is_authenticated:
         if request.is_ajax():
-            content = request.POST["message"]
+            content = request.POST.get("message")
             author = request.user
             post_ref = request.POST.get("post_ref")
             post_id = Post.objects.get(id=post_ref)
-            message = Messages.objects.create(
-                content=content, author=author, post_id=post_id
+            Messages.objects.create(
+                title="", content=content, author=author, post_id=post_id
             )
 
             return JsonResponse({"message": "SEND OK"})
@@ -333,3 +332,30 @@ def display_map(request):
                 return JsonResponse({"result": "OK"})
             except ValueError:
                 return JsonResponse({"result": "failed"})
+
+
+def update_account(request):
+    if request.user.is_authenticated:
+        form = ProfilForm(request.POST)
+        if form.is_valid():
+            print("DATAS")
+            print(form.data)
+            return redirect("/")
+
+
+@requires_csrf_token
+def get_geocode(request):
+    """
+    Function defined to modify a specific post
+    """
+
+    if request.is_ajax():
+        country = request.POST["country"]
+        city = request.POST["city"]            
+        coords = GeoMaps(country, city)
+        coords = coords.get_geocode()
+        context = {
+            "coords": coords,
+        }
+        return JsonResponse(context)
+    

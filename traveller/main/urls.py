@@ -18,5 +18,6 @@ urlpatterns = [
     path("upload_img/", views.upload_img, name="upload_img"),
     path("messages/", views.messages, name="messages"),
     path("display_map/", views.display_map, name="display_map"),
-
+    path('update_account/', views.update_account, name="update_account"),
+    path("get_geocode/", views.get_geocode, name="get_geocode"),
 ]

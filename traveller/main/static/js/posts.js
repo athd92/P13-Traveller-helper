@@ -7,11 +7,11 @@ $('.open-map').click(function() {
     var city = $(this).data("id");
     console.log(city)
     displayMap(city)
-    $('#close-map').click(function () {
+    $('#close-map').click(function() {
         console.log('CLOSE')
-    $(".divmap").empty();
+        $(".divmap").empty();
     });
-    
+
 })
 
 
@@ -23,7 +23,6 @@ $("#agree-btn").click(function() {
 });
 
 $("#myModal").on("shown.bs.modal", function() {
-    console.log("MODAL LAUNCH");
     $("#myInput").trigger("focus");
 });
 
@@ -63,7 +62,8 @@ function deletePost(post_id) {
 
 $(".first-message").click(function() {
     var post_ref = $(this).data("id");
-    var message = $("#message-text").val()
+    var message = $("#message-text").val();
+
     $('#new-message').click(function() {
         sendMessage(message, post_ref);
     });
@@ -175,13 +175,14 @@ function displayMap(city) {
 
 
 var map;
+
 function initMap() {
     console.log('map')
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: -34.397, lng: 150.644 },
-    zoom: 8
-  });
-  console.log("fini")
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8
+    });
+    console.log("fini")
 }
 
 
@@ -219,36 +220,65 @@ $(document).ready(function() {
     var map = null;
     var myMarker;
     var myLatlng;
-  
+
     function initializeGMap(lat, lng) {
-      myLatlng = new google.maps.LatLng(lat, lng);
-  
-      var myOptions = {
-        zoom: 12,
-        zoomControl: true,
-        center: myLatlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-  
-      map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-  
-      myMarker = new google.maps.Marker({
-        position: myLatlng
-      });
-      myMarker.setMap(map);
+        myLatlng = new google.maps.LatLng(lat, lng);
+
+        var myOptions = {
+            zoom: 12,
+            zoomControl: true,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+        myMarker = new google.maps.Marker({
+            position: myLatlng
+        });
+        myMarker.setMap(map);
     }
-  
+
     // Re-init map before show modal
     $('#myModal').on('show.bs.modal', function(event) {
-      var button = $(event.relatedTarget);
-      initializeGMap(button.data('lat'), button.data('lng'));
-      $("#location-map").css("width", "100%");
-      $("#map_canvas").css("width", "100%");
+
+        const button = $(event.relatedTarget);
+        const city = button.data('city');
+        const country = button.data('country');
+
+        $.ajax({
+            type: "POST",
+            url: `${window.origin}/get_geocode/`,
+            data: {
+                city: city,
+                country: country,
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+            },
+            success: function(data) {
+                console.log(data.coords)
+                let lat = String(data.coords.lat).slice(0, 6)
+                let lng = String(data.coords.lng).slice(0, 6)
+                lat = parseFloat(lat)
+                lng = parseFloat(lng)
+
+                initializeGMap(lat, lng);
+                $("#location-map").css("width", "100%");
+                $("#map_canvas").css("width", "100%");
+                // Trigger map resize event after modal shown
+                $('#myModal').on('shown.bs.modal', function() {
+                    google.maps.event.trigger(map, "resize");
+                    map.setCenter(myLatlng);
+                });
+
+            },
+            error: function(req, err) {
+                $("#sent").hide();
+                console.log("Ajax request failed: " + err + req);
+                $("#error").show();
+            },
+        })
+
+
     });
-  
-    // Trigger map resize event after modal shown
-    $('#myModal').on('shown.bs.modal', function() {
-      google.maps.event.trigger(map, "resize");
-      map.setCenter(myLatlng);
-    });
-  });
+
+});
