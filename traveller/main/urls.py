@@ -16,8 +16,9 @@ urlpatterns = [
     path("send_message/", views.send_message, name="send_message"),
     path("modify_post/", views.modify_post, name="modify_post"),
     path("upload_img/", views.upload_img, name="upload_img"),
-    path("messages/", views.messages, name="messages"),
+    path("messages_posted/", views.messages_posted, name="messages_posted"),
     path("display_map/", views.display_map, name="display_map"),
     path('update_account/', views.update_account, name="update_account"),
     path("get_geocode/", views.get_geocode, name="get_geocode"),
+    path("profil/", views.profil, name="profil"),
 ]

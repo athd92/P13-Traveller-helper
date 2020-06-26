@@ -30,9 +30,7 @@ function getBase64(file) {
             headers: { "X-CSRFToken": getCookie("csrftoken") },
             data: { img64: img64 },
             dataType: 'json',
-            beforeSend: function() {
-                console.log("before")
-            },
+            beforeSend: function() {},
             complete: function() {
 
             },
@@ -40,7 +38,7 @@ function getBase64(file) {
                 if (response != 0) {
                     $("#img").attr("src", response);
                     $(".preview img").show(); // Display image element
-                    window.location.reload()
+                    location.reload()
                 } else {
                     alert('file not uploaded');
                 }

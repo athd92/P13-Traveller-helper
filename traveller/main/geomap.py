@@ -17,7 +17,7 @@ class GeoMaps:
         """Method used to get the geocode coords"""
 
         gmaps = googlemaps.Client(
-            key="KEY"
+            key=""
         )
         self.geocode_result = gmaps.geocode(f'{self.country},  {self.city}')
         return self.geocode_result[0]["geometry"]["location"]

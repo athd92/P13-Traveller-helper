@@ -88,7 +88,8 @@ function sendMessage(message, post_ref) {
 
         success: function(data, textStatus) {
             console.log(data)
-            location.reload();
+            toastr.success('Message sent!')
+            $('#messageModal').modal('toggle');
         },
         error: function(req, err) {
             $("#sent").hide();
@@ -177,12 +178,10 @@ function displayMap(city) {
 var map;
 
 function initMap() {
-    console.log('map')
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 8
     });
-    console.log("fini")
 }
 
 

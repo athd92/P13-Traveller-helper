@@ -19,7 +19,7 @@
     </ul>
     {% if user.is_authenticated%}
     {% if messages != '' %}
-    <a class="nav-link text-warning" href="{% url 'main:messages' %}" style='color:white'> Messages</a>    
+    <a class="nav-link text-warning" href="{% url 'main:messages_posted' %}" style='color:white'> Messages</a>    
     {% endif %}
     <a class="nav-link text-warning" href="{% url 'main:account' %}" style='color:white' > My account</a>
     <a class="nav-link text-warning" href="{% url 'main:logout' %}" style='color:white' > Logout</a>

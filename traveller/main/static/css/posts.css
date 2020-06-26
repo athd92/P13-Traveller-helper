@@ -59,7 +59,8 @@
     border-color: #343a40;
 }
 
-a, h1 {
+a,
+h1 {
     font-family: "Chelsea Market", cursive;
 }
 
@@ -68,4 +69,9 @@ a, h1 {
     color: azure;
     font-size: 5vw;
     background-repeat: no-repeat;
+}
+
+.toast {
+    opacity: 1 !important;
+    bottom: -50px;
 }

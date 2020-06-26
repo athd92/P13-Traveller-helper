@@ -22,10 +22,17 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/posts.css'%}">
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
 
-<script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDj-umfEPU-98fAaKqvapfiXHKQp_iJ57c&callback=initMap">
-</script>
-      
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    </script>
+    <script src="sweetalert2.all.min.js"></script>
+    <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 
 
 </head>
@@ -83,6 +90,14 @@
         </div>
         {% comment %}
 
+
+        {% comment %} NOTIF {% endcomment %}
+        {% block notif %}
+        {% include './includes/notif.html' %}
+        {% endblock notif %}
+        {% comment %} END NOTIF {% endcomment %}
+
+
         {% comment %} START POSTS {% endcomment %}
         {% for post in all_posts %}
         <div class="container mb-5">
@@ -107,7 +122,7 @@
                                         {% else %}
                                         <p>Posted: {{post.creation_date}}</br>
                                             {% if user.is_authenticated%}
-                                            <a class="btn btn-primary btn-sm mt-1" href="{% url 'main:messages' %}"
+                                            <a class="btn btn-primary btn-sm mt-1" href="{% url 'main:messages_posted' %}"
                                                 role="button">See message(s)</a>
                                             {% else%}
                                             {%endif%}
@@ -139,18 +154,21 @@
                                         <div class="col-sm-12 col-12 col-md-12 col-lg-12 col-xl-4">
                                             <div>
 
-                                                <h6 class=""><strong>Posted by :</strong> {{post.created_by}}
+                                                <h6 class=""><strong>Posted by :</strong>
+                                                <a class="btn btn-success" href="/profil/?username={{post.created_by}}" role="button">{{post.created_by}}</a>
+                                                
+                                                 
                                                     {% for key, value in poster_pictures.items %}
                                                     {% if key == post.created_by  %}
                                                     {% if value != "" %}
                                                     <img src={{value}} alt="Profile Picture"
                                                         class="img-responsive img-rounded m-3"
                                                         style="max-height: 30px; max-width: 30px;"></h6>
-                                                        {% else %}
-                                                    <img src={% static '/img/default-avatar.png' %} alt="Profile Picture"
-                                                        class="img-responsive img-rounded m-3"
-                                                        style="max-height: 30px; max-width: 30px;"></h6>
-                                                        {% endif %}
+                                                {% else %}
+                                                <img src={% static '/img/default-avatar.png' %} alt="Profile Picture"
+                                                    class="img-responsive img-rounded m-3"
+                                                    style="max-height: 30px; max-width: 30px;"></h6>
+                                                {% endif %}
                                                 {% else %}
                                                 {% endif %}
                                                 {%endfor%}

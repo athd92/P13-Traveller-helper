@@ -56,5 +56,7 @@ a {
     font-family: "Chelsea Market", cursive;
 }
 
-
-
+.toast {
+    opacity: 1 !important;
+    bottom: -50px;
+}

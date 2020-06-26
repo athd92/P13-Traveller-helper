@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.png">
-    <title>Travelerer</title>
+    <title>Traveler</title>
     <!-- Latest compiled and minified CSS -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
@@ -21,7 +21,15 @@
     <link rel="stylesheet" href="{% static 'fontawesome/fontawesome/css/font-awesome.min.css'%}">
     <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" type="text/javascript"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    </link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
 </head>
 
 <body>
@@ -35,23 +43,11 @@
         {% endblock content %}
         {% comment %} END NAVBAR {% endcomment %}
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
 
 
         {% comment %} SEARCH {% endcomment %}
 
-        <div id="cover-caption" class="mb-3" >
+        <div id="cover-caption" class="mb-3">
 
             <div class="container mt-0" id='indexbox'>
                 <div class="container">
@@ -96,12 +92,9 @@
 
 
 
-
-
-
         {% comment %} PAGINATION {% endcomment %}
 
-        <div class="container" >
+        <div class="container">
             <div class="row  justify-content-center">
                 <div class="pagination ">
                     <span class="step-links">
@@ -133,26 +126,74 @@
 
 
 
+        {% comment %} NOTIF {% endcomment %}
+        {% block notif %}
+        {% include './includes/notif.html' %}
+        {% endblock notif %}
+        {% comment %} END NOTIF {% endcomment %}
+
+
 
 
 
 
         {% comment %} COUNTRY CARDS {% endcomment %}
         <div class="container">
-            <div class="row  justify-content-center" >
+            <div class="row  justify-content-center">
                 {% for c in page_obj %}
                 <div class="card m-2 indexcard animated fadeInUp" style="width: 18rem;">
                     <div class="card-body">
                         <img class='alignright' src={{c.1}}>
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
+                        <p><small>Temperatures averages:</small></p>
+                        <canvas id="{{c.0}}" width="80" height="40"></canvas>
 
-                        <p><small>This line of text is meant to be treated as fine print.</small></p>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                                aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
-                        </div>
-                        <h6 class="card-text text-left mt-3" >{{c.5}}</h6>
+                        <script>
+                        Chart.defaults.global.legend.display = false;
+                            var t = JSON.parse('{{c.6|safe}}')
+                            var ctx = document.getElementById('{{c.0}}').getContext('2d');
+                            var myLineChart = new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep",
+                                        "Oct", "Nov", "Dec"
+                                    ],
+                                    datasets: [{
+                                        backgroundColor: 'lightblue',
+			                            borderColor: 'royalblue',
+                                        backgroundColor: ["blue"
+                                        ],
+                                        data: [
+                                            parseFloat(t.jan),
+                                            parseFloat(t.feb),
+                                            parseFloat(t.mar),
+                                            parseFloat(t.apr),
+                                            parseFloat(t.may),
+                                            parseFloat(t.jun),
+                                            parseFloat(t.july),
+                                            parseFloat(t.aug),
+                                            parseFloat(t.sept),
+                                            parseFloat(t.oct),
+                                            parseFloat(t.nov),
+                                            parseFloat(t.dec)
+                                        ],
+                                        fill: false
+                                        
+                                    }]
+                                },
+
+                            });
+
+                        </script>
+
+        {% comment %} progress {% endcomment %}
+        {% block progress %}
+        {% include './includes/temp-progress.html' %}
+        {% endblock progress %}
+        {% comment %} END progress {% endcomment %}
+
+                        <h6 class="card-text text-left mt-3">{{c.5}}</h6>
                         {% if c.3 == 0 %}
                         <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>Create a post <i
                                 class="fa fa-plus-circle text-warning" aria-hidden="true"></i></a>
@@ -199,12 +240,59 @@
         </div>
         {% comment %} END PAGINATION {% endcomment %}
 
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-bottom">
+            <div class="container">
+
+                <ul class='navbar-text'>
+                    <p>About</p>
+                    <li><a href="https://github.com/athd92/P13-Traveller-helper">Github.com/athd92</a></li>
+                    <li>
+                        <p><a href="mailto:m.bluth@example.com">Contact</a>
+                            <p>
+                    </li>
+                </ul>
+
+                <ul class='navbar-text'>
+                    <p>Resources</p>
+                    <li>Wikipedia</li>
+                    <li>Googlemaps</li>
+                </ul>
 
 
 
 
-        {% comment %} END BG IMAGE {% endcomment %}
-    </div>
+
+
+
+                {% comment %} END BG IMAGE {% endcomment %}
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            {% comment %} RGPD {% endcomment %}
+            {% if user.is_authenticated%}
+            {% else %}
+            <div id='cookie-bar'
+                style='position:fixed; bottom:0; left:0; width: 100%;  text-align: center; padding: 12px 0; margin:0;  background-color: #343a40;  color: #919191;  font: 14px arial, sans-serif;'>
+                <div style='display:inline-block;width:78%;margin:0; font-family: Arial;'>
+                    This website use cookies -
+                    But none of them are shared or traded!
+                </div>
+                <div style='width:20%;'></div>
+                <button id='agree-btn' type="button" class="btn btn-success">OK</button>
+            </div>
+            {% endif%}
+            {% comment %} END RGPD {% endcomment %}
+            {% comment %} LINKS {% endcomment %}
 
 
 
@@ -218,33 +306,27 @@
 
 
 
-    {% comment %} RGPD {% endcomment %}
-    {% if user.is_authenticated%}
-    {% else %}
-    <div id='cookie-bar'
-        style='position:fixed; bottom:0; left:0; width: 100%;  text-align: center; padding: 12px 0; margin:0;  background-color: #343a40;  color: #919191;  font: 14px arial, sans-serif;'>
-        <div style='display:inline-block;width:78%;margin:0; font-family: Arial;'>
-            This website use cookies -
-            But none of them are shared or traded!
-        </div>
-        <div style='width:20%;'></div>
-        <button id='agree-btn' type="button" class="btn btn-success">OK</button>
-    </div>
-    {% endif%}
-    {% comment %} END RGPD {% endcomment %}
-    {% comment %} LINKS {% endcomment %}
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
-    <script src="{% static '/js/index.js'%}"></script>
 
-    <script>AOS.init();</script>
 
-    {% comment %} END LINKS {% endcomment %}
+
+
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous">
+            </script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous">
+            </script>
+            <script src="{% static '/js/index.js'%}"></script>
+
+            <script>
+                AOS.init();
+
+            </script>
+
+            {% comment %} END LINKS {% endcomment %}
 </body>
 
 </html>

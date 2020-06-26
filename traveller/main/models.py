@@ -9,6 +9,8 @@ class Country(models.Model):
 
     name = models.CharField(max_length=200)
     alpha_2 = models.CharField(max_length=20)
+    alpha_3 = models.CharField(max_length=20)
+    temp_averges = models.CharField(max_length=500)
     flag = models.CharField(max_length=200)
     resume = models.TextField()
 
@@ -57,8 +59,9 @@ class Messages(models.Model):
     """
     Class used to store messages send
     """
+
     title = models.CharField(max_length=200)
     created_at = models.DateField(auto_now=True)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    post_id = models.ForeignKey(Post,  on_delete=models.CASCADE)
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -17,8 +17,9 @@ from django.db.models import Count
 from django.core.paginator import Paginator
 from operator import itemgetter
 import base64
-from datetime import date
+from datetime import date, datetime
 import os
+import json
 
 
 def index(request):
@@ -26,7 +27,10 @@ def index(request):
     This function returns the  template
     """
     user = request.user
-    messages = Messages.objects.filter(author=user.id)
+    month = datetime.now()
+    month = month.strftime("%B")
+
+    mssg = Messages.objects.filter(author=user.id)
     clist = []
     choicelist = []
     c = Country.objects.all()
@@ -37,9 +41,19 @@ def index(request):
 
     clist = list(
         post_count.values_list(
-            "name", "flag", "alpha_2", "post__count", "id", "resume"
+            "name",
+            "flag",
+            "alpha_2",
+            "post__count",
+            "id",
+            "resume",
+            "temp_averges",
         )
-    )  # list of tuple
+    )
+
+    for i in range(0, len(clist)):
+        clist[i] = list(clist[i])
+        clist[i][-1] = json.dumps(eval(clist[i][-1]))
 
     clist = sorted(clist, key=itemgetter(3),)  # sort list by index[3] (posts)
     clist.reverse()
@@ -52,7 +66,7 @@ def index(request):
         "clist": clist,
         "choicelist": choicelist,
         "page_obj": page_obj,
-        "mesages": messages,
+        "mesages": mssg,
     }
 
     return render(request, "main/index.html", context)
@@ -74,6 +88,7 @@ def login_request(request):
                 user = authenticate(username=username, password=password)
                 if user is not None:
                     login(request, user)
+                    messages.success(request, "Logged in!")
                     return redirect("/")
                 else:
                     pass
@@ -126,6 +141,7 @@ def logout_request(request):
     """
     if request.user.is_authenticated:
         logout(request)
+        messages.success(request, "Logged out!")
         return redirect("main:index")
     else:
         return redirect("main:index")
@@ -140,9 +156,10 @@ def account(request):
             img = img.img
         except:
             img = ""
+        infos = UserAttributes.objects.filter(owner=request.user).latest("id")
         name = request.user.username
         email = request.user.email
-        context = {"name": name, "email": email, "img": img}
+        context = {"name": name, "email": email, "img": img, "infos": infos}
         return render(request, "main/account.html", context)
     else:
         return redirect("/")
@@ -225,12 +242,15 @@ def send_post(request):
                 alpha = country.alpha_2
                 url = f"../static/img/flags/flag-{alpha}.jpg"
                 name = country.name
+                mess = "Message sent!"
                 context = {
                     "all_posts": all_posts,
                     "clist": clist,
                     "url": url,
                     "name": name,
+                    "mess": mess,
                 }
+                messages.success(request, "Post sent!")
                 return render(request, "main/posts.html", context)
             else:
                 return HttpResponse(form.errors)
@@ -311,7 +331,7 @@ def upload_img(request):
             return JsonResponse({"ok": "ok"})
 
 
-def messages(request):
+def messages_posted(request):
     user = request.user
     if request.user.is_authenticated:
         user_posts = Post.objects.filter(created_by=user.id)
@@ -340,6 +360,18 @@ def update_account(request):
         if form.is_valid():
             print("DATAS")
             print(form.data)
+            about = form.data.get("about")
+
+            user = request.user
+            user_atts = UserAttributes.objects.filter(owner=user).last()
+            print(user_atts)
+
+            user_atts.about = about
+            user_atts.save(update_fields=["about"])
+            messages.success(request, "Profil updated")
+            return redirect("/")
+        else:
+            messages.success(request, "Error while update")
             return redirect("/")
 
 
@@ -351,11 +383,24 @@ def get_geocode(request):
 
     if request.is_ajax():
         country = request.POST["country"]
-        city = request.POST["city"]            
+        city = request.POST["city"]
         coords = GeoMaps(country, city)
         coords = coords.get_geocode()
         context = {
             "coords": coords,
         }
         return JsonResponse(context)
-    
+
+
+def profil(request):
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            username = request.GET.get("username")
+            user = User.objects.get(username=username)
+            infos = UserAttributes.objects.filter(owner=user).latest("id")
+            context = {"infos": infos}
+            return render(request, "main/profil.html", context)
+        else:
+            return render(request, "main/index.html")
+    else:
+        return redirect("/")
