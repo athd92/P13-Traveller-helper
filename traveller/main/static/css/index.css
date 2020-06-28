@@ -34,7 +34,7 @@
     float: right;
 }
 
-.indexcard {
+.indexcard {    
     -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
     box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
@@ -60,3 +60,4 @@ a {
     opacity: 1 !important;
     bottom: -50px;
 }
+

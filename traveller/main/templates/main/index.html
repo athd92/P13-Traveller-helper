@@ -124,12 +124,12 @@
 
 
         {% comment %} COUNTRY CARDS {% endcomment %}
-        <div class="container">
+        <div class="container-fluid">
             <div class="row  justify-content-center">
                 {% for c in page_obj %}
-                <div class="card m-2 indexcard animated fadeInUp" style="width: 18rem;">
+                <div class="card m-2 indexcard animated fadeInUp" style="width: 25rem;">
                     <div class="card-body">
-                        <img class='alignright' src={{c.1}}>
+                        <img class='alignright' src="{{c.1}}">
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0|slice:":15"}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
                         <p><small>Temperatures averages:</small></p>
@@ -184,8 +184,9 @@
 
                         {% else %}
                         <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>See the posts </a>
+                        {%endif%}                       
+                        <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>Pictures </a>
 
-                        {%endif%}
 
                     </div>
                 </div>
