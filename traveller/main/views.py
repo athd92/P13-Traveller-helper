@@ -29,9 +29,9 @@ def index(request):
     user = request.user
     month = datetime.now()
     month = month.strftime("%B")
+    actual_month = month[0:3]
 
     mssg = Messages.objects.filter(author=user.id)
-    clist = []
     choicelist = []
     c = Country.objects.all()
     for i in c:
@@ -63,6 +63,7 @@ def index(request):
     page_obj = paginator.get_page(page_number)
 
     context = {
+        "actual_month": actual_month,
         "clist": clist,
         "choicelist": choicelist,
         "page_obj": page_obj,
@@ -168,6 +169,7 @@ def account(request):
 def posts(request):
     if request.method == "GET":
         country_id = request.GET.get("country_id")
+        api_key = os.environ.get("FRONT_API_KEY")
         clist = []
         c = Country.objects.all()
         for i in c:
@@ -201,6 +203,7 @@ def posts(request):
             "name": name,
             "country_id": country_id,
             "all_posts": all_posts,
+            "api_key": api_key,
         }
 
     return render(request, f"main/posts.html", context)
@@ -356,23 +359,27 @@ def display_map(request):
 
 def update_account(request):
     if request.user.is_authenticated:
-        form = ProfilForm(request.POST)
-        if form.is_valid():
-            print("DATAS")
+        if request.method == "POST":
+            form = ProfilForm(request.POST)
             print(form.data)
-            about = form.data.get("about")
+            if form.is_valid():
+                print("DATAS")
+                print(form.data)
+                about = form.data.get("about")
 
-            user = request.user
-            user_atts = UserAttributes.objects.filter(owner=user).last()
-            print(user_atts)
+                user = request.user
+                user_atts = UserAttributes.objects.filter(owner=user).last()
+                print(user_atts)
 
-            user_atts.about = about
-            user_atts.save(update_fields=["about"])
-            messages.success(request, "Profil updated")
-            return redirect("/")
-        else:
-            messages.success(request, "Error while update")
-            return redirect("/")
+                user_atts.about = about
+                user_atts.save(update_fields=["about"])
+                messages.success(request, "Profil updated")
+                return redirect("/")
+            else:
+                messages.success(request, "Error while update")
+                return redirect("/")
+    else:
+        return redirect("/")
 
 
 @requires_csrf_token

@@ -253,8 +253,7 @@ $(document).ready(function() {
                 country: country,
                 csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
             },
-            success: function(data) {
-                console.log(data.coords)
+            success: function(data) {           console.log(data.coords)
                 let lat = String(data.coords.lat).slice(0, 6)
                 let lng = String(data.coords.lng).slice(0, 6)
                 lat = parseFloat(lat)

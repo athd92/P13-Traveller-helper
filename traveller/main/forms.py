@@ -17,9 +17,7 @@ class SearchForm(forms.Form):
 class ProfilForm(forms.Form):
     """Form used for profil infos"""
 
-    name = forms.CharField(max_length=100)
     username = forms.CharField(max_length=100)
-    email = forms.EmailField()
     about = forms.Textarea()
 
 

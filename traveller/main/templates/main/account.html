@@ -96,18 +96,12 @@
                                         </ul>
                                         <div class="tab-content pt-3">
                                             <div class="tab-pane active">
-                                                <form class="form" novalidate="" action="{% url 'main:update_account'%}" method="POST">
+                                                <form class="form" action="{% url 'main:update_account'%}" method="POST">
                                                 {% csrf_token %}
+                                                     {{form}}
                                                     <div class="row">
                                                         <div class="col">
                                                             <div class="row">
-                                                                <div class="col">
-                                                                    <div class="form-group">                                                                        
-                                                                        <input class="form-control" type="text"
-                                                                            name="name" placeholder="Name"
-                                                                            value="{{infos.owner.name}}" required='required'>
-                                                                    </div>
-                                                                </div>
                                                                 <div class="col">
                                                                     <div class="form-group">                                                                        
                                                                         <input class="form-control" type="text"
@@ -115,15 +109,7 @@
                                                                             value="{{infos.owner.username}}" required='required'>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="form-group">
-                                                                        <input class="form-control" type="text"
-                                                                            placeholder="{{infos.owner.email}}" value="{{infos.owner.email}}"name="email" required='required'>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            </div>                                                            
                                                             <div class="row">
                                                                 <div class="col mb-3">
                                                                     <div class="form-group">

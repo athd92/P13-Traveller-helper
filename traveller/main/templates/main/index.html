@@ -46,9 +46,7 @@
 
 
         {% comment %} SEARCH {% endcomment %}
-
         <div id="cover-caption" class="mb-3">
-
             <div class="container mt-0" id='indexbox'>
                 <div class="container">
                     <div class="row text-white">
@@ -73,7 +71,6 @@
                                     </select>
                                     <div class="form-group">
                                     </div>
-
                                 </form>
                             </div>
                         </div>
@@ -93,7 +90,6 @@
 
 
         {% comment %} PAGINATION {% endcomment %}
-
         <div class="container">
             <div class="row  justify-content-center">
                 <div class="pagination ">
@@ -118,23 +114,13 @@
                 </div>
             </div>
         </div>
-
-
         {% comment %} END PAGINATION {% endcomment %}
-
-
-
-
 
         {% comment %} NOTIF {% endcomment %}
         {% block notif %}
         {% include './includes/notif.html' %}
         {% endblock notif %}
         {% comment %} END NOTIF {% endcomment %}
-
-
-
-
 
 
         {% comment %} COUNTRY CARDS {% endcomment %}
@@ -144,11 +130,12 @@
                 <div class="card m-2 indexcard animated fadeInUp" style="width: 18rem;">
                     <div class="card-body">
                         <img class='alignright' src={{c.1}}>
-                        <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0}}</h5>
+                        <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0|slice:":15"}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
                         <p><small>Temperatures averages:</small></p>
-                        <canvas id="{{c.0}}" width="80" height="40"></canvas>
 
+                        
+                        <canvas id="{{c.0}}" width="80" height="40"></canvas>
                         <script>
                         Chart.defaults.global.legend.display = false;
                             var t = JSON.parse('{{c.6|safe}}')
@@ -156,7 +143,7 @@
                             var myLineChart = new Chart(ctx, {
                                 type: 'line',
                                 data: {
-                                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep",
+                                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
                                         "Oct", "Nov", "Dec"
                                     ],
                                     datasets: [{
@@ -187,11 +174,6 @@
 
                         </script>
 
-        {% comment %} progress {% endcomment %}
-        {% block progress %}
-        {% include './includes/temp-progress.html' %}
-        {% endblock progress %}
-        {% comment %} END progress {% endcomment %}
 
                         <h6 class="card-text text-left mt-3">{{c.5}}</h6>
                         {% if c.3 == 0 %}
@@ -243,27 +225,18 @@
         <div class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-bottom">
             <div class="container">
 
-                <ul class='navbar-text'>
-                    <p>About</p>
-                    <li><a href="https://github.com/athd92/P13-Traveller-helper">Github.com/athd92</a></li>
-                    <li>
-                        <p><a href="mailto:m.bluth@example.com">Contact</a>
-                            <p>
-                    </li>
-                </ul>
-
+                
+                <div class="navbar-text">
+                  <p>Github: athd92</p>
+                <p>Contact:<p>
+                </div>
+                    
+                
                 <ul class='navbar-text'>
                     <p>Resources</p>
                     <li>Wikipedia</li>
                     <li>Googlemaps</li>
                 </ul>
-
-
-
-
-
-
-
                 {% comment %} END BG IMAGE {% endcomment %}
             </div>
 
