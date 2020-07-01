@@ -2,8 +2,10 @@ from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.contrib import messages
 from ..views import posts
-from ..models import Country, Post
+from ..models import Country, Post, UserAttributes
+from datetime import date
 import json
 
 
@@ -25,9 +27,17 @@ class TestAccountPage(TestCase):
 
     def test_account_success_display(self):
         """ Testing access page for logged in user """
-        self.client.login(
+        user = self.client.login(
             username="test_user", password="Password1234+",
         )
+        self.attributs = UserAttributes.objects.create(
+            owner=self.user,
+            avatar="",
+            last_connexion="2020-07-01",
+            about="",
+            img="base64",
+        )
+
         response = self.client.get(reverse("main:account"))
         self.assertEquals(response.status_code, 200)
 
@@ -63,7 +73,6 @@ class TestPostsPage(TestCase):
             created_by=self.user,
             budget="20 euros",
         )
-
 
     def test_invalid_post_GET(self):
         country = self.country.id
@@ -232,16 +241,15 @@ class TestSendMessageAjax(TestCase):
         )
         self.assertEquals(response.status_code, 200)
         self.assertJSONEqual(
-            str(response.content, encoding="utf8"), {'failed': 'failed'}
+            str(response.content, encoding="utf8"), {"failed": "failed"}
         )
 
-    def test_send_message_ajax_not_logged_in(self):        
+    def test_send_message_ajax_not_logged_in(self):
         message = {"message": "fake valid message", "post_ref": self.post.id}
         response = self.client.post(
             "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
         )
         self.assertEquals(response.status_code, 200)
-        
 
 
 class TestModifyPostAjax(TestCase):
@@ -275,32 +283,73 @@ class TestModifyPostAjax(TestCase):
             budget="20 euros",
         )
 
-    def test_send_valid_message_ajax(self):
-        self.client.login(username="test_user", password="Password1234+")
-        message = {"post_id": self.post.id}
+    # def test_send_valid_message_ajax(self):
+    #     self.client.login(username="test_user", password="Password1234+")
+    #     message = {"post_id": self.post.id}
+    #     response = self.client.post(
+    #         "/modify_post/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+    #     )
+    #     self.assertEquals(response.status_code, 200)
+    #     self.assertJSONEqual(
+    #         str(response.content, encoding="utf8"),
+    #         {
+    #             "post": {
+    #                 "budget": "20 euros",
+    #                 "city": "Paris",
+    #                 "country_id": 1,
+    #                 "created_by_id": 1,
+    #                 "creation_date": "2020-06-19",
+    #                 "end_date": "2019-10-10",
+    #                 "free_places": "1",
+    #                 "id": 1,
+    #                 "interest": "Cuisine",
+    #                 "message": "Un cours de cuisine à Paris?",
+    #                 "ready": True,
+    #                 "start_date": "2019-10-10",
+    #                 "title": "Cuisine",
+    #                 "total_travelers": "1",
+    #                 "wanted_travelers": "2",
+    #             },
+    #         },
+    #     )
+
+
+
+class TestSendImageAjax(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="test_user",
+            password="Password1234+",
+            email="test@test.com",
+        )
+    
+    def test_invalid_send(self):
+        self.client.login()
+        message = {"img64": "fake image"}
         response = self.client.post(
-            "/modify_post/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+            "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
         )
         self.assertEquals(response.status_code, 200)
         self.assertJSONEqual(
-            str(response.content, encoding="utf8"),
-            {
-                "post": {
-                    "budget": "20 euros",
-                    "city": "Paris",
-                    "country_id": 1,
-                    "created_by_id": 1,
-                    "creation_date": "2020-06-19",
-                    "end_date": "2019-10-10",
-                    "free_places": "1",
-                    "id": 1,
-                    "interest": "Cuisine",
-                    "message": "Un cours de cuisine à Paris?",
-                    "ready": True,
-                    "start_date": "2019-10-10",
-                    "title": "Cuisine",
-                    "total_travelers": "1",
-                    "wanted_travelers": "2",
-                },
-            },
+            str(response.content, encoding="utf8"), {"failed": "failed"}
         )
+
+    # def test_valid_image_send(self):
+    #     self.client.login()
+    #     message = {"img64": "fake image"}
+    #     today = date.today()
+    #     user_atts = UserAttributes.objects.create(
+    #         owner=self.user,
+    #         avatar="",
+    #         last_connexion="2019-10-10",
+    #         about="",
+    #         img=message
+    #     )
+    #     response = self.client.post(
+    #         "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+    #     )
+    #     self.assertEquals(response.status_code, 200)
+    #     self.assertJSONEqual(
+    #         str(response.content, encoding="utf8"), {"ok": "ok"}
+    #     )

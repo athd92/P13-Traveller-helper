@@ -2,7 +2,7 @@ from django.test import TestCase, SimpleTestCase
 from django.urls import reverse, resolve
 from ..views import index, register, login_request, logout_request, account
 from ..views import posts, send_post, delete_post, send_message, modify_post
-from ..views import upload_img, messages, display_map
+from ..views import upload_img, display_map, messages_posted
 
 
 class TestUrl(SimpleTestCase):
@@ -64,9 +64,9 @@ class TestUrl(SimpleTestCase):
         self.assertEquals(resolve(url).func, upload_img)
 
     def test_messages_is_resolved(self):
-        url = reverse("main:messages")
+        url = reverse("main:messages_posted")
         print(resolve(url))
-        self.assertEquals(resolve(url).func, messages)
+        self.assertEquals(resolve(url).func, messages_posted)
 
     def test_display_map_is_resolved(self):
         url = reverse("main:display_map")
