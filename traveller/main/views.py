@@ -58,7 +58,7 @@ def index(request):
     clist = sorted(clist, key=itemgetter(3),)  # sort list by index[3] (posts)
     clist.reverse()
 
-    paginator = Paginator(clist, 8)  # Show 25 contacts per page.
+    paginator = Paginator(clist, 6)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
