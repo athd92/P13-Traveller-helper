@@ -41,7 +41,6 @@ class UserFormWithEmail(UserCreationForm):
         return user
 
 
-# Create your models here.
 class PostForm(forms.Form):
     """
     Class used to define a post

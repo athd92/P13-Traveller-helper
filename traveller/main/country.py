@@ -4,7 +4,7 @@ import pycountry
 class Country:
     """Class used to maniuplate the initial query"""
 
-    def get_list(self):
+    def get_list(self) -> list:
         """Method used to check if the country
         name exist"""
         all_countries = list(pycountry.countries)

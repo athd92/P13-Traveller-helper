@@ -74,10 +74,20 @@ class TestPostsPage(TestCase):
             budget="20 euros",
         )
 
-    def test_invalid_post_GET(self):
+    def test_valid_post_GET(self):
         country = self.country.id
-        response = self.client.get("main:posts", args=(country,))
-        self.assertEqual(response.status_code, 404)
+        response = self.client.get("/posts/?country_id=1")
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_int_post_GET(self):
+        country = self.country.id
+        response = self.client.get("/posts/?country_id=2222222222")
+        self.assertEqual(response.status_code, 302)
+
+    def test_invalid_str_post_GET(self):
+        country = self.country.id
+        response = self.client.get("/posts/?country_id=france")
+        self.assertEqual(response.status_code, 302)
 
 
 class TestSendPost(TestCase):
@@ -136,6 +146,15 @@ class TestSendPost(TestCase):
         budget = post.values("budget")
         self.assertTrue(budget, "20 euros")
 
+    def test_visitor_send_invalid_request(self):
+        response = self.client.get("/send_post/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_send_post(self):
+        self.client.login(username="test_user", password="Password1234+")
+        response = self.client.get("/send_post/")
+        self.assertEqual(response.status_code, 302)
+
 
 class TestAjaxDeletePost(TestCase):
     def setUp(self):
@@ -168,7 +187,7 @@ class TestAjaxDeletePost(TestCase):
             budget="20 euros",
         )
 
-    def test_delete_post_valid_ajax(self):
+    def test_delete_post_valid_ajax(self) -> dict:
         self.client.login(username="test_user", password="Password1234+")
         payload = {"post_id": self.post.id}
         response = self.client.post(
@@ -179,7 +198,7 @@ class TestAjaxDeletePost(TestCase):
             str(response.content, encoding="utf8"), {"result": "deleted"}
         )
 
-    def test_delete_post_invalid_ajax(self):
+    def test_delete_post_invalid_ajax(self) -> dict:
         self.client.login(username="test_user", password="Password1234+")
         payload = {"post_id": "fake"}
         response = self.client.post(
@@ -189,6 +208,13 @@ class TestAjaxDeletePost(TestCase):
         self.assertJSONEqual(
             str(response.content, encoding="utf8"), {"result": "failed"}
         )
+
+    def test_visitor_delete_post_invalid_ajax(self) -> dict:
+        payload = {"post_id": "fake"}
+        response = self.client.post(
+            "/delete_post/", payload, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEquals(response.status_code, 302)
 
 
 class TestSendMessageAjax(TestCase):
@@ -222,7 +248,7 @@ class TestSendMessageAjax(TestCase):
             budget="20 euros",
         )
 
-    def test_send_valid_message_ajax(self):
+    def test_send_valid_message_ajax(self) -> dict:
         self.client.login(username="test_user", password="Password1234+")
         message = {"message": "fake valid message", "post_ref": self.post.id}
         response = self.client.post(
@@ -233,7 +259,7 @@ class TestSendMessageAjax(TestCase):
             str(response.content, encoding="utf8"), {"message": "SEND OK"}
         )
 
-    def test_send_invalid_message_ajax(self):
+    def test_send_invalid_message_ajax(self) -> dict:
         self.client.login(username="test_user", password="Password1d234+")
         message = {"message": "fake valid message", "post_ref": self.post.id}
         response = self.client.post(
@@ -250,6 +276,13 @@ class TestSendMessageAjax(TestCase):
             "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
         )
         self.assertEquals(response.status_code, 200)
+
+    def test_send_message_invalid_not_ajax_request(self):
+        message = {"message": "fake valid message", "post_ref": self.post.id}
+        response = self.client.post("/send_message/", message)
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"), {"failed": "failed"}
+        )
 
 
 class TestModifyPostAjax(TestCase):
@@ -283,36 +316,20 @@ class TestModifyPostAjax(TestCase):
             budget="20 euros",
         )
 
-    # def test_send_valid_message_ajax(self):
-    #     self.client.login(username="test_user", password="Password1234+")
-    #     message = {"post_id": self.post.id}
-    #     response = self.client.post(
-    #         "/modify_post/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
-    #     )
-    #     self.assertEquals(response.status_code, 200)
-    #     self.assertJSONEqual(
-    #         str(response.content, encoding="utf8"),
-    #         {
-    #             "post": {
-    #                 "budget": "20 euros",
-    #                 "city": "Paris",
-    #                 "country_id": 1,
-    #                 "created_by_id": 1,
-    #                 "creation_date": "2020-06-19",
-    #                 "end_date": "2019-10-10",
-    #                 "free_places": "1",
-    #                 "id": 1,
-    #                 "interest": "Cuisine",
-    #                 "message": "Un cours de cuisine à Paris?",
-    #                 "ready": True,
-    #                 "start_date": "2019-10-10",
-    #                 "title": "Cuisine",
-    #                 "total_travelers": "1",
-    #                 "wanted_travelers": "2",
-    #             },
-    #         },
-    #     )
+    def test_send_valid_modification_ajax(self):
+        self.client.login(username="test_user", password="Password1234+")
+        post_id = {"post_id": self.post.id}
+        response = self.client.post(
+            "/modify_post/", post_id, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEquals(response.status_code, 200)
 
+    def test_visitor_invalid_request_modification_ajax(self):
+        post_id = {"post_id": self.post.id}
+        response = self.client.post(
+            "/modify_post/", post_id, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEquals(response.status_code, 302)
 
 
 class TestSendImageAjax(TestCase):
@@ -323,33 +340,190 @@ class TestSendImageAjax(TestCase):
             password="Password1234+",
             email="test@test.com",
         )
-    
-    def test_invalid_send(self):
-        self.client.login()
+
+    def test_valid_image_send(self) -> dict:
+
+        self.client.login(username="test_user", password="Password1234+")
         message = {"img64": "fake image"}
+        today = date.today()
+        user_atts = UserAttributes.objects.create(
+            owner=self.user,
+            avatar="",
+            last_connexion=today,
+            about="",
+            img="img64",
+        )
         response = self.client.post(
-            "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+            "/upload_img/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
         )
         self.assertEquals(response.status_code, 200)
         self.assertJSONEqual(
-            str(response.content, encoding="utf8"), {"failed": "failed"}
+            str(response.content, encoding="utf8"), {"ok": "ok"}
         )
 
-    # def test_valid_image_send(self):
-    #     self.client.login()
-    #     message = {"img64": "fake image"}
-    #     today = date.today()
-    #     user_atts = UserAttributes.objects.create(
-    #         owner=self.user,
-    #         avatar="",
-    #         last_connexion="2019-10-10",
-    #         about="",
-    #         img=message
-    #     )
-    #     response = self.client.post(
-    #         "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
-    #     )
-    #     self.assertEquals(response.status_code, 200)
-    #     self.assertJSONEqual(
-    #         str(response.content, encoding="utf8"), {"ok": "ok"}
-    #     )
+    def test_invalid_image_send(self):
+        img = {"img64": "fake image"}
+        today = date.today()
+        user_atts = UserAttributes.objects.create(
+            owner=self.user,
+            avatar="",
+            last_connexion=today,
+            about="",
+            img="img64",
+        )
+        response = self.client.post(
+            "/upload_img/", img, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEquals(response.status_code, 302)
+
+    def test_not_ajax_image_send(self):
+        response = self.client.get("/upload_image/")
+        self.assertTrue(response.status_code, 302)
+
+
+class TestMessagesPosted(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="test_user",
+            password="Password1234+",
+            email="test@test.com",
+        )
+        self.country = Country.objects.create(
+            name="France",
+            alpha_2="FR",
+            flag="../static/img/flags/flag-FR.jpg",
+            resume="La France est un pays d'Europe...",
+        )
+        self.post = Post.objects.create(
+            country=self.country,
+            creation_date="2019-10-10",
+            city="Paris",
+            total_travelers="1",
+            wanted_travelers="2",
+            free_places="1",
+            interest="Cuisine",
+            title="Cuisine",
+            message="Un cours de cuisine à Paris?",
+            start_date="2019-10-10",
+            end_date="2019-10-10",
+            ready=True,
+            created_by=self.user,
+            budget="20 euros",
+        )
+
+    def test_valid_message_request(self) -> dict:
+        self.client.login(username="test_user", password="Password1234+")
+        response = self.client.get(reverse("main:messages_posted"))
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, "message")
+
+    def test_visitor_message_request(self) -> dict:
+        response = self.client.get(reverse("main:messages_posted"))
+        self.assertEquals(response.status_code, 302)
+
+
+class TestDisplayMap(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="test_user",
+            password="Password1234+",
+            email="test@test.com",
+        )
+        self.country = Country.objects.create(
+            name="France",
+            alpha_2="FR",
+            flag="../static/img/flags/flag-FR.jpg",
+            resume="La France est un pays d'Europe...",
+        )
+        self.post = Post.objects.create(
+            country=self.country,
+            creation_date="2019-10-10",
+            city="Paris",
+            total_travelers="1",
+            wanted_travelers="2",
+            free_places="1",
+            interest="Cuisine",
+            title="Cuisine",
+            message="Un cours de cuisine à Paris?",
+            start_date="2019-10-10",
+            end_date="2019-10-10",
+            ready=True,
+            created_by=self.user,
+            budget="20 euros",
+        )
+
+    def test_valid_map_display(self):
+        city = {"city": "Paris"}
+        response = self.client.post(
+            "/display_map/", city, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEquals(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"), {"result": "OK"}
+        )
+
+    def test_invalid_map_display(self):
+        city = {"czerzeriity": "Paris"}
+        response = self.client.post(
+            "/display_map/", city, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertEquals(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"), {"result": "failed"}
+        )
+
+    def test_not_ajax_map_display(self):
+        response = self.client.get("/display_map", {"city": "Paris"})
+        self.assertEqual(response.status_code, 301)
+
+
+class TestUpdateAccount(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="test_user",
+            password="Password1234+",
+            email="test@test.com",
+        )
+        today = date.today()
+        self.user_atts = UserAttributes.objects.create(
+            owner=self.user,
+            avatar="",
+            last_connexion=today,
+            about="",
+            img="img64",
+        )
+
+    def test_valid_update_account(self):
+        self.client.login(username="test_user", password="Password1234+")
+        response = self.client.post(
+            "/update_account/", {"username": "test_user", "about": "à propos"}
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_invalid_update_account(self):
+        self.client.login(username="test_user", password="Password1234+")
+        response = self.client.post("/update_account/")
+        self.assertEqual(response.status_code, 302)
+
+    def test_visitor_update_account(self):
+        response = self.client.post("/update_account/")
+        self.assertEqual(response.status_code, 302)
+
+
+class TestAjaxGeocode(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_valid_geocode_ajax_request(self):
+        datas = {"country": "France", "city": "Paris"}
+        response = self.client.post(
+            "/get_geocode/", datas, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"),
+            {"coords": {"lat": 48.856614, "lng": 2.3522219}},
+        )
+

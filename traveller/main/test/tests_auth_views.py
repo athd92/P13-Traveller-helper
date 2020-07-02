@@ -94,6 +94,11 @@ class LoginTestView(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_already_logged(self):
+        self.client.login(username="antoine", password="Password3216854+")
+        response = self.client.post('/login/')
+        self.assertEqual(response.status_code, 302)
+
 
 class LogoutTestView(TestCase):
     '''Class used to test logout view function'''
@@ -109,10 +114,13 @@ class LogoutTestView(TestCase):
             {'name': 'test@test.com', 'password': 'Password1234+'})
 
     def test_logout_successful(self):
+        self.client.login(username="antoine", password="Password1234+")
         response = self.client.get('/logout/')
         self.assertEqual(response.status_code, 302)
 
     def test_logout_redirect(self):
         response = self.client.get('/logout/')
         self.assertEqual(response.url, '/')
+        self.assertEqual(response.status_code, 302)
+
 

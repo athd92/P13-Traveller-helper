@@ -3,10 +3,12 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from .forms import SearchForm
 from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
+from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.models import User
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import UserFormWithEmail, PostForm, ProfilForm
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.views import LoginView
 from .geomap import GeoMaps
 import pycountry
@@ -174,7 +176,12 @@ def posts(request):
         c = Country.objects.all()
         for i in c:
             clist.append(i)
-        c = Country.objects.get(id=country_id)
+        try:
+            c = Country.objects.get(id=country_id)
+        except ValueError:
+            return redirect("/")
+        except ObjectDoesNotExist:
+            return redirect("/")
         alpha = c.alpha_2
         name = c.name
 
@@ -212,7 +219,6 @@ def posts(request):
 def send_post(request):
     if request.user.is_authenticated:
         form = PostForm(request.POST)
-
         if request.method == "POST":
             form = PostForm(request.POST)
             if form.is_valid():
@@ -256,16 +262,15 @@ def send_post(request):
                 messages.success(request, "Post sent!")
                 return render(request, "main/posts.html", context)
             else:
-                return HttpResponse(form.errors)
-
+                return redirect('/')
         else:
-            return HttpResponse(form.non_field_errors)
+            return redirect('/')
     else:
         return render(request, "main/posts.html")
 
 
 @requires_csrf_token
-def delete_post(request):
+def delete_post(request) -> dict:
     if request.user.is_authenticated:
         if request.is_ajax():
             try:
@@ -273,12 +278,14 @@ def delete_post(request):
                 selected_post = Post.objects.get(id=post_id)
                 selected_post.delete()
                 return JsonResponse({"result": "deleted"})
-            except:
+            except ValueError:
                 return JsonResponse({"result": "failed"})
+    else:
+        return redirect('/')
 
 
 @requires_csrf_token
-def send_message(request):
+def send_message(request) -> dict:
     """
     Function used to send message
     """
@@ -293,11 +300,13 @@ def send_message(request):
             )
 
             return JsonResponse({"message": "SEND OK"})
+        else:
+            return JsonResponse({"failed": "failed"})
     return JsonResponse({"failed": "failed"})
 
 
 @requires_csrf_token
-def modify_post(request):
+def modify_post(request) -> dict:
     """
     Function defined to modify a specific post
     """
@@ -311,10 +320,12 @@ def modify_post(request):
                 "post": post,
             }
             return JsonResponse(context)
+    else:
+        return redirect('/')
 
 
 @requires_csrf_token
-def upload_img(request):
+def upload_img(request) -> dict:
     """
     Function defined to upload profile image
     """
@@ -332,6 +343,10 @@ def upload_img(request):
             )
 
             return JsonResponse({"ok": "ok"})
+        else:
+            return redirect("/")
+    else:
+        return redirect("/")
 
 
 def messages_posted(request):
@@ -348,29 +363,24 @@ def messages_posted(request):
 
 @requires_csrf_token
 def display_map(request):
-    if request.user.is_authenticated:
-        if request.is_ajax():
-            try:
-                city = request.POST["city"]
-                return JsonResponse({"result": "OK"})
-            except ValueError:
-                return JsonResponse({"result": "failed"})
+    if request.is_ajax():
+        try:
+            city = request.POST["city"]
+            return JsonResponse({"result": "OK"})
+        except MultiValueDictKeyError:
+            return JsonResponse({"result": "failed"})
+    else:
+        return redirect('/')
 
 
 def update_account(request):
     if request.user.is_authenticated:
         if request.method == "POST":
             form = ProfilForm(request.POST)
-            print(form.data)
             if form.is_valid():
-                print("DATAS")
-                print(form.data)
                 about = form.data.get("about")
-
                 user = request.user
                 user_atts = UserAttributes.objects.filter(owner=user).last()
-                print(user_atts)
-
                 user_atts.about = about
                 user_atts.save(update_fields=["about"])
                 messages.success(request, "Profil updated")
