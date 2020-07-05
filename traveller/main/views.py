@@ -49,7 +49,8 @@ def index(request):
             "post__count",
             "id",
             "resume",
-            "temp_averges",
+            "picture",
+            "temp_averges",            
         )
     )
 
@@ -58,7 +59,7 @@ def index(request):
         clist[i][-1] = json.dumps(eval(clist[i][-1]))
 
     clist = sorted(clist, key=itemgetter(3),)  # sort list by index[3] (posts)
-    clist.reverse()
+    
 
     paginator = Paginator(clist, 6)  # Show  6  contacts per page.
     page_number = request.GET.get("page")
@@ -262,9 +263,9 @@ def send_post(request):
                 messages.success(request, "Post sent!")
                 return render(request, "main/posts.html", context)
             else:
-                return redirect('/')
+                return redirect("/")
         else:
-            return redirect('/')
+            return redirect("/")
     else:
         return render(request, "main/posts.html")
 
@@ -281,7 +282,7 @@ def delete_post(request) -> dict:
             except ValueError:
                 return JsonResponse({"result": "failed"})
     else:
-        return redirect('/')
+        return redirect("/")
 
 
 @requires_csrf_token
@@ -321,7 +322,7 @@ def modify_post(request) -> dict:
             }
             return JsonResponse(context)
     else:
-        return redirect('/')
+        return redirect("/")
 
 
 @requires_csrf_token
@@ -370,7 +371,7 @@ def display_map(request):
         except MultiValueDictKeyError:
             return JsonResponse({"result": "failed"})
     else:
-        return redirect('/')
+        return redirect("/")
 
 
 def update_account(request):
@@ -421,3 +422,4 @@ def profil(request):
             return render(request, "main/index.html")
     else:
         return redirect("/login")
+

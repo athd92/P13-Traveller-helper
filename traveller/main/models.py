@@ -13,9 +13,10 @@ class Country(models.Model):
     temp_averges = models.CharField(max_length=500)
     flag = models.CharField(max_length=200)
     resume = models.TextField()
+    picture = models.TextField()
 
     def __repr__(self):
-        return f"{self.name} {self.alpha_2}"
+        return f"{self.name} {self.alpha_2} {self.alpha_3}"
 
 
 # Create your models here.

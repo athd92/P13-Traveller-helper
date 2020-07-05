@@ -32,6 +32,28 @@
 
 </head>
 
+{% comment %} IMG MODAL {% endcomment %}
+<!-- Modal -->
+<div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="spinner-grow text-success" id="spinner" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <img src="" class="img-fluid" id='randomImg'>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% comment %} END IMG MODAL {% endcomment %}
+
+
 <body>
     {% comment %} START BG IMG {% endcomment %}
     <div style="background:  url('../../static/img/background-register.jpeg')" class="page-holder bg-cover">
@@ -74,12 +96,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-sm prestext">
-                            <h2>Partners</h2>
-                            <h5>Whether your expat and live abroad, or resident in your country, if your ready to share
-                                your local best places, local-tricks or/and a bit of your time, let Travelerers know!
-                            </h5>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -132,13 +149,16 @@
                         <img class='alignright' src="{{c.1}}">
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0|slice:":15"}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
+                        {% if c.6 == 'No image found'%}
+                        <img class="card-img-top" src="{% static '../../static/img/default.jpg'%}" alt="Card image" style="width:50px, height:50px">
+                        {%else%}
+                        <img class="card-img-top" src="{{c.6}}" alt="Card image" style="width:50px, height:50px">           
+                        {%endif%}
                         <p><small>Temperatures averages in degrees:</small></p>
-
-                        
                         <canvas id="{{c.0}}" width="80" height="40"></canvas>
                         <script>
-                        Chart.defaults.global.legend.display = false;
-                            var t = JSON.parse('{{c.6|safe}}')
+                            Chart.defaults.global.legend.display = false;
+                            var t = JSON.parse('{{c.7|safe}}')
                             var ctx = document.getElementById('{{c.0}}').getContext('2d');
                             var myLineChart = new Chart(ctx, {
                                 type: 'line',
@@ -148,9 +168,8 @@
                                     ],
                                     datasets: [{
                                         backgroundColor: 'lightblue',
-			                            borderColor: 'royalblue',
-                                        backgroundColor: ["blue"
-                                        ],
+                                        borderColor: 'royalblue',
+                                        backgroundColor: ["blue"],
                                         data: [
                                             parseFloat(t.jan),
                                             parseFloat(t.feb),
@@ -166,7 +185,7 @@
                                             parseFloat(t.dec)
                                         ],
                                         fill: false
-                                        
+
                                     }]
                                 },
 
@@ -184,9 +203,11 @@
 
                         {% else %}
                         <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>See the posts </a>
-                        {%endif%}                       
-                        <a class="btn btn-primary" href="/posts/?country_id={{c.4}}" role='button'>Pictures </a>
-
+                        {%endif%}
+                        {% comment %} <button type="button" class="random-img btn btn-primary" data-toggle="modal"
+                            data-target="#imgModal" data-id="{{c.0}}">
+                            Illustration
+                        </button> {% endcomment %}
 
                     </div>
                 </div>
@@ -226,13 +247,13 @@
         <div class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-bottom">
             <div class="container">
 
-                
+
                 <div class="navbar-text">
-                  <p>Github: athd92</p>
-                <p>Contact:<p>
+                    <p>Github: athd92</p>
+                    <p>Contact:<p>
                 </div>
-                    
-                
+
+
                 <ul class='navbar-text'>
                     <p>Resources</p>
                     <li>Wikipedia</li>
@@ -240,16 +261,6 @@
                 </ul>
                 {% comment %} END BG IMAGE {% endcomment %}
             </div>
-
-
-
-
-
-
-
-
-
-
 
 
             {% comment %} RGPD {% endcomment %}
@@ -267,22 +278,6 @@
             {% endif%}
             {% comment %} END RGPD {% endcomment %}
             {% comment %} LINKS {% endcomment %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
