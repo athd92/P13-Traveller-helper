@@ -150,9 +150,10 @@
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0|slice:":15"}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
                         {% if c.6 == 'No image found'%}
-                        <img class="card-img-top" src="{% static '../../static/img/default.jpg'%}" alt="Card image" style="width:50px, height:50px">
+                        <img class="card-img-top" src="{% static '../../static/img/default.jpg'%}" alt="Card image"
+                            style="width:50px, height:50px">
                         {%else%}
-                        <img class="card-img-top" src="{{c.6}}" alt="Card image" style="width:50px, height:50px">           
+                        <img class="card-img-top" src="{{c.6}}" alt="Card image" style="width:50px, height:50px">
                         {%endif%}
                         <p><small>Temperatures averages in degrees:</small></p>
                         <canvas id="{{c.0}}" width="80" height="40"></canvas>
@@ -246,18 +247,20 @@
 
         <div class="navbar navbar-expand-lg navbar-dark bg-dark navbar-fixed-bottom">
             <div class="container">
-
-
-                <div class="navbar-text">
-                    <p>Github: athd92</p>
-                    <p>Contact:<p>
-                </div>
-
-
+                <ul class='navbar-text'>
+                    <p>About</p>
+                    <li><i class="fa fa-github text-warning" aria-hidden="true"></i><a href="https://www.github.com/athd92"> github/athd92</a></li>
+                    <li><i class="fa fa-linkedin text-warning" aria-hidden="true"></i><a
+                            href="https://www.linkedin.com/in/antoine-t-a58932184?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B8Jq0bnhoS72nyev6LONHgw%3D%3D"> linkedin</a>
+                    </li>
+                </ul>
                 <ul class='navbar-text'>
                     <p>Resources</p>
-                    <li>Wikipedia</li>
-                    <li>Googlemaps</li>
+                    <li><a href="https://unsplash.com/">unsplash</a></li>
+                    <li><i class="fa fa-google text-warning" aria-hidden="true"></i><a href="https://developers.google.com/maps/documentation?hl=fr"> Googlemaps</a></li>
+                </ul>
+                <ul class='navbar-text'>
+                    <li><i class="fa fa-wikipedia-w text-warning" aria-hidden="true"></i><a href="https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal"> wikipedia</a></li>
                 </ul>
                 {% comment %} END BG IMAGE {% endcomment %}
             </div>
