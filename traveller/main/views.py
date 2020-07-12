@@ -60,7 +60,6 @@ def index(request):
 
     clist = sorted(clist, key=itemgetter(3),)  # sort list by index[3] (posts)
     
-
     paginator = Paginator(clist, 6)  # Show  6  contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -160,6 +159,7 @@ def account(request):
             img = img.img
         except:
             img = ""
+        print(request.user.username)
         infos = UserAttributes.objects.filter(owner=request.user).latest("id")
         name = request.user.username
         email = request.user.email
@@ -293,6 +293,8 @@ def send_message(request) -> dict:
     if request.user.is_authenticated:
         if request.is_ajax():
             content = request.POST.get("message")
+            print('"CONTENT')
+            print(content)
             author = request.user
             post_ref = request.POST.get("post_ref")
             post_id = Post.objects.get(id=post_ref)
@@ -422,4 +424,20 @@ def profil(request):
             return render(request, "main/index.html")
     else:
         return redirect("/login")
+
+
+def delete_message(request, message_id: int):
+    if request.user.is_authenticated:
+        mssg = Messages.objects.get(id=message_id)
+        mssg.delete()
+        
+
+    user = request.user
+    user_posts = Post.objects.filter(created_by=user.id)
+    messages = Messages.objects.filter(post_id__in=user_posts)
+    count = Messages.objects.filter(post_id__in=user_posts).count()
+    context = {"messages": messages, "count": count}
+    return render(request, "main/messages.html", context)
+    
+
 

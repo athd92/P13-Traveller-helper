@@ -21,4 +21,5 @@ urlpatterns = [
     path('update_account/', views.update_account, name="update_account"),
     path("get_geocode/", views.get_geocode, name="get_geocode"),
     path("profil/", views.profil, name="profil"),
+    path("delete_message/<int:message_id>/", views.delete_message, name="delete_message")
 ]

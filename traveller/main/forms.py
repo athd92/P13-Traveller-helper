@@ -21,6 +21,12 @@ class ProfilForm(forms.Form):
     about = forms.Textarea()
 
 
+class MessageForm(forms.Form):
+    """Form used for profil infos"""
+
+    content = forms.Textarea()
+
+
 class UserFormWithEmail(UserCreationForm):
     """Class used to register with email"""
 
@@ -76,4 +82,3 @@ class PostForm(forms.Form):
 
     def __repr__(self):
         return f"{self.country}"
-

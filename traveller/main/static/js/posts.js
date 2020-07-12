@@ -1,13 +1,13 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $("#maploader").hide();
 });
 
 
-$('.open-map').click(function() {
+$('.open-map').click(function () {
     var city = $(this).data("id");
     console.log(city)
     displayMap(city)
-    $('#close-map').click(function() {
+    $('#close-map').click(function () {
         console.log('CLOSE')
         $(".divmap").empty();
     });
@@ -17,20 +17,20 @@ $('.open-map').click(function() {
 
 
 
-$("#agree-btn").click(function() {
+$("#agree-btn").click(function () {
     $("#cookie-bar").hide();
     $("#agree-btn").hide();
 });
 
-$("#myModal").on("shown.bs.modal", function() {
+$("#myModal").on("shown.bs.modal", function () {
     $("#myInput").trigger("focus");
 });
 
 
-$(".first-delete").click(function() {
+$(".first-delete").click(function () {
     var post_id = $(this).data("id");
     $("#DeleteModalCenter").modal()
-    $('#del-post').click(function() {
+    $('#del-post').click(function () {
         deletePost(post_id);
     })
 });
@@ -43,13 +43,13 @@ function deletePost(post_id) {
             post_id: post_id,
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-        beforeSend: function() {},
-        complete: function() {},
-        success: function(data, textStatus) {
+        beforeSend: function () {},
+        complete: function () {},
+        success: function (data, textStatus) {
             console.log(data)
             location.reload();
         },
-        error: function(req, err) {
+        error: function (req, err) {
             $("#sent").hide();
             console.log("Ajax request failed: " + err + req);
             $("#error").show();
@@ -60,16 +60,20 @@ function deletePost(post_id) {
 
 
 
-$(".first-message").click(function() {
+$(".first-message").on("click", function () {
     var post_ref = $(this).data("id");
-    var message = $("#message-text").val();
 
-    $('#new-message').click(function() {
+    $('#new-message').click(function () {
+
+        var message = $("#message-text").val();
+        console.log(message)
+        console.log(post_ref)
         sendMessage(message, post_ref);
     });
 });
 
 function sendMessage(message, post_ref) {
+    console.log(message)
 
     $.ajax({
         type: "POST",
@@ -79,19 +83,19 @@ function sendMessage(message, post_ref) {
             post_ref: post_ref,
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-        beforeSend: function() {
+        beforeSend: function () {
 
         },
-        complete: function() {
+        complete: function () {
 
         },
 
-        success: function(data, textStatus) {
+        success: function (data, textStatus) {
             console.log(data)
             toastr.success('Message sent!')
             $('#messageModal').modal('toggle');
         },
-        error: function(req, err) {
+        error: function (req, err) {
             $("#sent").hide();
             console.log("Ajax request failed: " + err + req);
             $("#error").show();
@@ -99,7 +103,7 @@ function sendMessage(message, post_ref) {
     })
 }
 
-$(".modify-modal").click(function() {
+$(".modify-modal").click(function () {
 
     var post_id = $(this).data("id");
 
@@ -116,14 +120,14 @@ $(".modify-modal").click(function() {
             post_id: post_id,
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-        beforeSend: function() {},
-        complete: function() {},
+        beforeSend: function () {},
+        complete: function () {},
 
-        success: function(data, textStatus) {
+        success: function (data, textStatus) {
             displayModifyModal(data)
 
         },
-        error: function(req, err) {
+        error: function (req, err) {
             $("#sent").hide();
             console.log("Ajax request failed: " + err + req);
             $("#error").show();
@@ -143,21 +147,21 @@ function displayMap(city) {
             city: city,
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
         },
-        beforeSend: function() {
+        beforeSend: function () {
 
         },
-        complete: function() {
+        complete: function () {
 
         },
 
-        success: function(data) {
+        success: function (data) {
             console.log(data)
             $('#displayMap').modal()
             $('.divmap').append('<div id="map"></div>');
             initMap();
 
         },
-        error: function(req, err) {
+        error: function (req, err) {
             $("#sent").hide();
             console.log("Ajax request failed: " + err + req);
             $("#error").show();
@@ -179,7 +183,10 @@ var map;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: -34.397, lng: 150.644 },
+        center: {
+            lat: -34.397,
+            lng: 150.644
+        },
         zoom: 8
     });
 }
@@ -215,7 +222,7 @@ function initMap() {
 
 
 // map function ajax
-$(document).ready(function() {
+$(document).ready(function () {
     var map = null;
     var myMarker;
     var myLatlng;
@@ -239,7 +246,7 @@ $(document).ready(function() {
     }
 
     // Re-init map before show modal
-    $('#myModal').on('show.bs.modal', function(event) {
+    $('#myModal').on('show.bs.modal', function (event) {
 
         const button = $(event.relatedTarget);
         const city = button.data('city');
@@ -253,7 +260,8 @@ $(document).ready(function() {
                 country: country,
                 csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
             },
-            success: function(data) {           console.log(data.coords)
+            success: function (data) {
+                console.log(data.coords)
                 let lat = String(data.coords.lat).slice(0, 6)
                 let lng = String(data.coords.lng).slice(0, 6)
                 lat = parseFloat(lat)
@@ -263,13 +271,13 @@ $(document).ready(function() {
                 $("#location-map").css("width", "100%");
                 $("#map_canvas").css("width", "100%");
                 // Trigger map resize event after modal shown
-                $('#myModal').on('shown.bs.modal', function() {
+                $('#myModal').on('shown.bs.modal', function () {
                     google.maps.event.trigger(map, "resize");
                     map.setCenter(myLatlng);
                 });
 
             },
-            error: function(req, err) {
+            error: function (req, err) {
                 $("#sent").hide();
                 console.log("Ajax request failed: " + err + req);
                 $("#error").show();
