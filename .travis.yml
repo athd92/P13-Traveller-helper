@@ -15,5 +15,4 @@ services:
   - postgresql
 
 script:
-  - cd traveler
   - coverage run manage.py test
