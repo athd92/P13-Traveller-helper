@@ -15,9 +15,6 @@ class Country(models.Model):
     resume = models.TextField()
     picture = models.TextField()
 
-    def __repr__(self):
-        return f"{self.name} {self.alpha_2} {self.alpha_3}"
-
 
 # Create your models here.
 class Post(models.Model):
@@ -40,9 +37,6 @@ class Post(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     budget = models.CharField(max_length=100)
 
-    def __repr__(self):
-        return f"{self.country} {self.city} {self.start_date} {self.end_date} {self.created_by}"
-
 
 class UserAttributes(models.Model):
     """
@@ -53,7 +47,7 @@ class UserAttributes(models.Model):
     avatar = models.CharField(max_length=100)
     last_connexion = models.DateField()
     about = models.TextField()
-    img = models.TextField()
+    img = models.TextField(default="")
 
 
 class Messages(models.Model):

@@ -21,12 +21,6 @@ class ProfilForm(forms.Form):
     about = forms.Textarea()
 
 
-class MessageForm(forms.Form):
-    """Form used for profil infos"""
-
-    content = forms.Textarea()
-
-
 class UserFormWithEmail(UserCreationForm):
     """Class used to register with email"""
 
@@ -48,9 +42,7 @@ class UserFormWithEmail(UserCreationForm):
 
 
 class PostForm(forms.Form):
-    """
-    Class used to define a post
-    """
+    """ Class used to define a post """
 
     country = forms.CharField(max_length=200)
     city = forms.CharField(max_length=200)
@@ -65,6 +57,7 @@ class PostForm(forms.Form):
     budget = forms.CharField(max_length=100)
 
     def save(self, commit=True):
+        """Save method to insert posts in DB """
 
         country = self.country.cleaned_data["country"]
         city = self.city.cleaned_data["city"]
@@ -79,6 +72,3 @@ class PostForm(forms.Form):
         budget = self.budget.cleaned_data["budget"]
 
         return self.country
-
-    def __repr__(self):
-        return f"{self.country}"

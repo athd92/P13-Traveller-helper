@@ -25,6 +25,3 @@ class GeoMaps:
             return self.geocode_result[0]["geometry"]["location"]
         except IndexError:
             return {"result": "no data found"}
-
-    def __str__(self):
-        return self.query, self.geocode_result

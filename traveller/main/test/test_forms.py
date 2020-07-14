@@ -37,6 +37,7 @@ class TestPostForm(TestCase):
         form = PostForm(data=form_data)
         self.assertTrue(form.is_valid())
 
+
     def test_invalid_post_form(self):
         form_data = {
             "country": "France",
@@ -114,6 +115,20 @@ class TestUserFormEmail(TestCase):
             }
         )
         self.assertTrue(form.is_valid())
+
+    def test_save_user(self):
+        form = UserFormWithEmail(
+            data={
+                "username": "toto",
+                "password1": "Password1234+",
+                "password2": "Password1234+",
+                "email": "test@test.com",
+                "age": 20,
+            }
+        )        
+        user = form.save()
+        self.assertEqual(user, user)
+
 
     def test_invalid_user_form_email(self):
         form = UserFormWithEmail(

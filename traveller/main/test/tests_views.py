@@ -37,7 +37,6 @@ class TestAccountPage(TestCase):
             about="",
             img="base64",
         )
-
         response = self.client.get(reverse("main:account"))
         self.assertEquals(response.status_code, 200)
 
@@ -279,10 +278,12 @@ class TestSendMessageAjax(TestCase):
 
     def test_send_message_invalid_not_ajax_request(self):
         message = {"message": "fake valid message", "post_ref": self.post.id}
-        response = self.client.post("/send_message/", message)
+        response = self.client.get(
+            "/send_message/", message, xhr=False)
         self.assertJSONEqual(
             str(response.content, encoding="utf8"), {"failed": "failed"}
         )
+
 
 
 class TestModifyPostAjax(TestCase):
@@ -379,6 +380,9 @@ class TestSendImageAjax(TestCase):
     def test_not_ajax_image_send(self):
         response = self.client.get("/upload_image/")
         self.assertTrue(response.status_code, 302)
+
+
+        
 
 
 class TestMessagesPosted(TestCase):
@@ -527,3 +531,59 @@ class TestAjaxGeocode(TestCase):
             {"coords": {"lat": 48.856614, "lng": 2.3522219}},
         )
 
+    def test_invalid_geocode_ajax_request(self):
+        datas = {"country": "ajrazermb", "city": "sdffsdf"}
+        response = self.client.post(
+            "/get_geocode/", datas, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"),
+            {"coords": {'result': 'no data found'}},
+        )
+
+
+class DeleteMessageTest(TestCase):
+    """ Testing delete message function"""
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="test_user",
+            password="Password1234+",
+            email="test@test.com",
+        )
+        self.country = Country.objects.create(
+            name="France",
+            alpha_2="FR",
+            flag="../static/img/flags/flag-FR.jpg",
+            resume="La France est un pays d'Europe...",
+        )
+        self.post = Post.objects.create(
+            country=self.country,
+            creation_date="2019-10-10",
+            city="Paris",
+            total_travelers="1",
+            wanted_travelers="2",
+            free_places="1",
+            interest="Cuisine",
+            title="Cuisine",
+            message="Un cours de cuisine à Paris?",
+            start_date="2019-10-10",
+            end_date="2019-10-10",
+            ready=True,
+            created_by=self.user,
+            budget="20 euros",
+        )
+        self.client.login(username="test_user", password="Password1234+")
+        message = {"message": "fake valid message", "post_ref": self.post.id}
+        response = self.client.post(
+            "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+
+    def test_delete_message_success(self):
+        self.client.login(username="test_user", password="Password1234+")
+        message = {"message": "fake valid message", "post_ref": self.post.id}
+        response = self.client.post(
+            "/send_message/", message, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        response = self.client.post(f"/delete_message/{self.post.id}")
+        self.assertEqual(response.status_code, 301)

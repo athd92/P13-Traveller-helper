@@ -94,7 +94,7 @@ def login_request(request):
                     messages.success(request, "Logged in!")
                     return redirect("/")
                 else:
-                    pass
+                    return redirect('/')
             else:
                 pass
         form = AuthenticationForm()
@@ -152,14 +152,10 @@ def logout_request(request):
 
 def account(request):
     if request.user.is_authenticated:
-        try:
-            img = UserAttributes.objects.filter(owner=request.user).latest(
-                "id"
-            )
-            img = img.img
-        except:
-            img = ""
-        print(request.user.username)
+        img = UserAttributes.objects.filter(owner=request.user).latest(
+            "id"
+        )
+        img = img.img
         infos = UserAttributes.objects.filter(owner=request.user).latest("id")
         name = request.user.username
         email = request.user.email
@@ -273,14 +269,13 @@ def send_post(request):
 @requires_csrf_token
 def delete_post(request) -> dict:
     if request.user.is_authenticated:
-        if request.is_ajax():
-            try:
-                post_id = request.POST["post_id"]
-                selected_post = Post.objects.get(id=post_id)
-                selected_post.delete()
-                return JsonResponse({"result": "deleted"})
-            except ValueError:
-                return JsonResponse({"result": "failed"})
+        try:
+            post_id = request.POST["post_id"]
+            selected_post = Post.objects.get(id=post_id)
+            selected_post.delete()
+            return JsonResponse({"result": "deleted"})
+        except ValueError:
+            return JsonResponse({"result": "failed"})
     else:
         return redirect("/")
 
@@ -290,21 +285,15 @@ def send_message(request) -> dict:
     """
     Function used to send message
     """
-    if request.user.is_authenticated:
-        if request.is_ajax():
-            content = request.POST.get("message")
-            print('"CONTENT')
-            print(content)
-            author = request.user
-            post_ref = request.POST.get("post_ref")
-            post_id = Post.objects.get(id=post_ref)
-            Messages.objects.create(
-                title="", content=content, author=author, post_id=post_id
-            )
-
-            return JsonResponse({"message": "SEND OK"})
-        else:
-            return JsonResponse({"failed": "failed"})
+    if request.user.is_authenticated:        
+        content = request.POST.get("message")
+        author = request.user
+        post_ref = request.POST.get("post_ref")
+        post_id = Post.objects.get(id=post_ref)
+        Messages.objects.create(
+            title="", content=content, author=author, post_id=post_id
+        )
+        return JsonResponse({"message": "SEND OK"})
     return JsonResponse({"failed": "failed"})
 
 
@@ -333,21 +322,17 @@ def upload_img(request) -> dict:
     Function defined to upload profile image
     """
     if request.user.is_authenticated:
-        if request.is_ajax():
-            img64 = request.POST.get("img64")
-            user = request.user
-            today = date.today()
-            new_img = UserAttributes.objects.create(
-                owner=user,
-                avatar="",
-                last_connexion=today,
-                about="",
-                img=img64,
-            )
-
-            return JsonResponse({"ok": "ok"})
-        else:
-            return redirect("/")
+        img64 = request.POST.get("img64")
+        user = request.user
+        today = date.today()
+        new_img = UserAttributes.objects.create(
+            owner=user,
+            avatar="",
+            last_connexion=today,
+            about="",
+            img=img64,
+        )
+        return JsonResponse({"ok": "ok"})
     else:
         return redirect("/")
 
@@ -366,14 +351,11 @@ def messages_posted(request):
 
 @requires_csrf_token
 def display_map(request):
-    if request.is_ajax():
-        try:
-            city = request.POST["city"]
-            return JsonResponse({"result": "OK"})
-        except MultiValueDictKeyError:
-            return JsonResponse({"result": "failed"})
-    else:
-        return redirect("/")
+    try:
+        city = request.POST["city"]
+        return JsonResponse({"result": "OK"})
+    except MultiValueDictKeyError:
+        return JsonResponse({"result": "failed"})
 
 
 def update_account(request):
@@ -401,15 +383,14 @@ def get_geocode(request):
     Function defined to modify a specific post
     """
 
-    if request.is_ajax():
-        country = request.POST["country"]
-        city = request.POST["city"]
-        coords = GeoMaps(country, city)
-        coords = coords.get_geocode()
-        context = {
-            "coords": coords,
-        }
-        return JsonResponse(context)
+    country = request.POST["country"]
+    city = request.POST["city"]
+    coords = GeoMaps(country, city)
+    coords = coords.get_geocode()
+    context = {
+        "coords": coords,
+    }
+    return JsonResponse(context)
 
 
 def profil(request):
@@ -430,14 +411,15 @@ def delete_message(request, message_id: int):
     if request.user.is_authenticated:
         mssg = Messages.objects.get(id=message_id)
         mssg.delete()
-        
+        user = request.user
+        user_posts = Post.objects.filter(created_by=user.id)
+        messages = Messages.objects.filter(post_id__in=user_posts)
+        count = Messages.objects.filter(post_id__in=user_posts).count()
+        context = {"messages": messages, "count": count}
+        return render(request, "main/messages.html", context)
+    else:
+        return redirect('/')
 
-    user = request.user
-    user_posts = Post.objects.filter(created_by=user.id)
-    messages = Messages.objects.filter(post_id__in=user_posts)
-    count = Messages.objects.filter(post_id__in=user_posts).count()
-    context = {"messages": messages, "count": count}
-    return render(request, "main/messages.html", context)
     
 
 

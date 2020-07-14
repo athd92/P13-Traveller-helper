@@ -37,7 +37,7 @@ class TestRegister(TestCase):
         self.assertContains(response, "Password confirmation")
 
     def can_register_with_post_method(self):
-        self.client.post(
+        response = self.client.post(
             "/register/",
             {
                 "username": "antoine",
@@ -47,6 +47,7 @@ class TestRegister(TestCase):
             },
         )
         new_user = MyUser.objects.last()
+        self.assertEqual(response.status_code, 304)
         self.assertEquals(new_user.username, "antoine")
 
     def test_cannot_register_with_incorrect_data(self):
@@ -61,6 +62,18 @@ class TestRegister(TestCase):
         )
         invalid_user = User.objects.filter(email='test@test.com').count()
         self.assertEqual(invalid_user, 0)
+
+    def test_invalid_form(self):
+        response = self.client.post(
+            "/register/",
+            {
+                "username": "",
+                "password": "Password3216854+",
+                "email": "",
+                "age": "20",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
 
 
 class LoginTestView(TestCase):
