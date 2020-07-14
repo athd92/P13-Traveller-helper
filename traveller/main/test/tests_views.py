@@ -517,30 +517,6 @@ class TestUpdateAccount(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-class TestAjaxGeocode(TestCase):
-    def setUp(self):
-        self.client = Client()
-
-    def test_valid_geocode_ajax_request(self):
-        datas = {"country": "France", "city": "Paris"}
-        response = self.client.post(
-            "/get_geocode/", datas, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
-        )
-        self.assertJSONEqual(
-            str(response.content, encoding="utf8"),
-            {"coords": {"lat": 48.856614, "lng": 2.3522219}},
-        )
-
-    def test_invalid_geocode_ajax_request(self):
-        datas = {"country": "ajrazermb", "city": "sdffsdf"}
-        response = self.client.post(
-            "/get_geocode/", datas, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
-        )
-        self.assertJSONEqual(
-            str(response.content, encoding="utf8"),
-            {"coords": {'result': 'no data found'}},
-        )
-
 
 class DeleteMessageTest(TestCase):
     """ Testing delete message function"""
@@ -587,3 +563,32 @@ class DeleteMessageTest(TestCase):
         )
         response = self.client.post(f"/delete_message/{self.post.id}")
         self.assertEqual(response.status_code, 301)
+
+
+
+
+
+class TestAjaxGeocode(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_valid_geocode_ajax_request(self):
+        datas = {"country": "France", "city": "Paris"}
+        response = self.client.post(
+            "/get_geocode/", datas, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"),
+            {"coords": {"lat": 48.856614, "lng": 2.3522219}},
+        )
+
+    def test_invalid_geocode_ajax_request(self):
+        datas = {"country": "ajrazermb", "city": "sdffsdf"}
+        response = self.client.post(
+            "/get_geocode/", datas, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
+        self.assertJSONEqual(
+            str(response.content, encoding="utf8"),
+            {"coords": {'result': 'no data found'}},
+        )
+

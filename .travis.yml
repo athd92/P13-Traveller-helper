@@ -17,3 +17,4 @@ services:
 script:
   - cd traveller
   - coverage run manage.py test
+  - coverage report
