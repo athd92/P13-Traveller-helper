@@ -15,4 +15,5 @@ services:
   - postgresql
 
 script:
-  - python3 coverage run manage.py test
+  - cd traveler
+  - coverage run manage.py test
