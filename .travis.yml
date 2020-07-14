@@ -9,7 +9,7 @@ branches:
   only:
     - staging
 
-env: DJANGO_SETTINGS_MODULE="traveler.settings"
+env: DJANGO_SETTINGS_MODULE="traveller.settings"
 
 services:
   - postgresql
