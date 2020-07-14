@@ -30,7 +30,7 @@ class Command(BaseCommand):
         for i in all_countries:
             clist.append(i)
         for country in tqdm(clist):
-            time.sleep(3)
+            time.sleep(35)
 
             try:
                 country_resume = wikipedia.summary(country.name, sentences=1)
@@ -61,7 +61,9 @@ class Command(BaseCommand):
                     + base64.b64encode(response.content).decode("utf-8")
                 )
             except:
-                self.stdout.write(self.style.WARNING("WARNING NOT FOUND IMAGE"))
+                self.stdout.write(
+                    self.style.WARNING("WARNING NOT FOUND IMAGE")
+                )
                 pic = "No image found"
 
             if country.alpha_3 in temp_dict:

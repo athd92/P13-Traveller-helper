@@ -150,7 +150,7 @@
                         <h5 class="card-title" style="font-family:Chelsea Market, cursive;'">{{c.0|slice:":15"}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Total posts : {{c.3}}</h6>
                         {% if c.6 == 'No image found'%}
-                        <img class="card-img-top" src="{% static '../../static/img/default.jpg'%}" alt="Card image"
+                        <img class="card-img-top" src="{% static '/img/pictures/random.jpg'%}"
                             style="width:50px, height:50px">
                         {%else%}
                         <img class="card-img-top" src="{{c.6}}" alt="Card image" style="width:50px, height:50px">
