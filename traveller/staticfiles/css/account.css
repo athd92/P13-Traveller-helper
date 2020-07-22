@@ -1,0 +1,20 @@
+body {
+    background: url('../../static/img/background2.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #fff;
+    background-color: #333;
+    font-family: 'Open Sans', Arial, Helvetica, Sans-Serif;
+}
+
+.account-box {
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+}
+
+a {
+    font-family: "Chelsea Market", cursive;
+}

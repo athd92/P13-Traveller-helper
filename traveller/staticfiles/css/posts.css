@@ -1,0 +1,77 @@
+.page-holder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+    background: lime;
+    /* Just to visualize the extent */
+}
+
+#agree-btn {
+    font-size: 100%;
+    position: absolute;
+    bottom: 5px;
+    right: 4%;
+    padding: 0 8px;
+    margin: 0;
+}
+
+#cover-caption {
+    margin-top: 5vw !important;
+}
+
+#indexbox {
+    background-color: rgb(75, 75, 94);
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    border-style: solid;
+    border-color: #ffc107;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.post-card {
+    width: 60vw;
+}
+
+.alignleft {
+    float: left;
+}
+
+.alignright {
+    float: right;
+}
+
+.indexcard {
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+}
+
+.post-resume-card {
+    -webkit-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    box-shadow: -4px 6px 22px 3px rgba(0, 0, 0, 0.61);
+    border-style: solid;
+    border-width: 2px;
+    border-color: #343a40;
+}
+
+a,
+h1 {
+    font-family: "Chelsea Market", cursive;
+}
+
+#map-div {
+    font-family: Chelsea Market, cursive;
+    color: azure;
+    font-size: 5vw;
+    background-repeat: no-repeat;
+}
+
+.toast {
+    opacity: 1 !important;
+    bottom: -50px;
+}
