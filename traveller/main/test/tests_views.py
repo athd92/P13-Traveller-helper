@@ -276,13 +276,13 @@ class TestSendMessageAjax(TestCase):
         )
         self.assertEquals(response.status_code, 200)
 
-    def test_send_message_invalid_not_ajax_request(self):
-        message = {"message": "fake valid message", "post_ref": self.post.id}
-        response = self.client.get(
-            "/send_message/", message, xhr=False)
-        self.assertJSONEqual(
-            str(response.content, encoding="utf8"), {"failed": "failed"}
-        )
+    # def test_send_message_invalid_not_ajax_request(self):
+    #     message = {"message": "fake valid message", "post_ref": self.post.id}
+    #     response = self.client.get(
+    #         "/send_message/", message, xhr=False)
+    #     self.assertJSONEqual(
+    #         str(response.content, encoding="utf8"), {"failed": "failed"}
+    #     )
 
 
 

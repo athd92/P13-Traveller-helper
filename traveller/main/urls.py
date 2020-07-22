@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 app_name = "main"  # here for namespacing of urls.
@@ -23,3 +22,5 @@ urlpatterns = [
     path("profil/", views.profil, name="profil"),
     path("delete_message/<int:message_id>/", views.delete_message, name="delete_message")
 ]
+
+

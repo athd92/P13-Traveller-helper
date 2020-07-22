@@ -21,8 +21,8 @@
     {% if messages != '' %}
     <a class="nav-link text-warning" href="{% url 'main:messages_posted' %}" style='color:white'> Messages</a>    
     {% endif %}
-    <a class="nav-link text-warning" href="{% url 'main:account' %}" style='color:white' > My account</a>
-    <a class="nav-link text-warning" href="{% url 'main:logout' %}" style='color:white' > Logout</a>
+    <a class="nav-link text-warning" href="{% url 'main:account' %}" id="login_button" style='color:white' > My account</a>
+    <a class="nav-link text-warning" href="{% url 'main:logout' %}" id="logout_button"style='color:white' > Logout</a>
     {% else %}
     <a class="nav-link text-warning" href="{% url 'main:login' %}" style='color:white'
       style="font-family:Chelsea Market, cursive;'">Login</a>
