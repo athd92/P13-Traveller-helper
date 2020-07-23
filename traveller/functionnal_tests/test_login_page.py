@@ -31,8 +31,8 @@ class TestFunctionnals(StaticLiveServerTestCase):
         self.driver.find_element(By.LINK_TEXT, "Login").click()
         time.sleep(1)     
         self.driver.find_element(By.ID, "id_username").click()        
-        self.driver.find_element(By.ID, "id_username").send_keys("Antoine")
-        self.driver.find_element(By.ID, "id_password").send_keys("Napoleon_92++")
+        self.driver.find_element(By.ID, "id_username").send_keys("""""""""")
+        self.driver.find_element(By.ID, "id_password").send_keys("""""""""")
         self.driver.find_element(By.ID, "id_password").send_keys(Keys.ENTER)        
         time.sleep(1)
         self.driver.find_element(By.LINK_TEXT, "Travelerer Helper").click()
@@ -53,8 +53,8 @@ class TestFunctionnals(StaticLiveServerTestCase):
         self.driver.find_element(By.ID, "id_username").click()
         time.sleep(1)        
         #login
-        self.driver.find_element(By.ID, "id_username").send_keys("Antoine")
-        self.driver.find_element(By.ID, "id_password").send_keys("Napoleon_92++")
+        self.driver.find_element(By.ID, "id_username").send_keys("""""""""""""")
+        self.driver.find_element(By.ID, "id_password").send_keys(""""""""""""")
         self.driver.find_element(By.ID, "id_password").send_keys(Keys.ENTER)        
         time.sleep(1)
         for i in range(2):
